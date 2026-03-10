@@ -19,6 +19,7 @@ import AdminLoginPage from "./pages/admin/AdminLoginPage.tsx";
 import Dashboard from "./pages/admin/Dashboard.tsx";
 import ProductsManager from "./pages/admin/ProductsManager.tsx";
 import OrdersManager from "./pages/admin/OrdersManager.tsx";
+import OrderDetailsPage from "./pages/admin/OrderDetailsPage.tsx";
 import CouponsManager from "./pages/admin/CouponsManager.tsx";
 import CategoriesManager from "./pages/admin/CategoriesManager.tsx";
 import BannersManager from "./pages/admin/BannersManager.tsx";
