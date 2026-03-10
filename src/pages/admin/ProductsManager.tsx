@@ -295,7 +295,10 @@ const ProductsManager = () => {
                     <label className="block font-body text-xs uppercase tracking-wider text-muted-foreground mb-1">Category</label>
                     <select value={form.category} onChange={e => setForm({ ...form, category: e.target.value })}
                       className="w-full h-10 px-3 border border-input bg-background rounded-md font-body text-sm text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
-                      {['running','basketball','football','training','lifestyle','trail','women'].map(c => <option key={c} value={c}>{c.charAt(0).toUpperCase() + c.slice(1)}</option>)}
+                      {categoryList.length > 0
+                        ? categoryList.map(c => <option key={c.id} value={c.slug}>{c.name}</option>)
+                        : ['running','basketball','football','training','lifestyle','trail','women'].map(c => <option key={c} value={c}>{c.charAt(0).toUpperCase() + c.slice(1)}</option>)
+                      }
                     </select>
                   </div>
                 </div>
