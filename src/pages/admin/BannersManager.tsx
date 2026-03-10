@@ -70,8 +70,8 @@ const BannersManager = () => {
       </div>
 
       {showForm && (
-        <div className="fixed inset-0 bg-background/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-card border border-border w-full max-w-lg p-8 rounded-lg shadow-lg">
+        <div className="fixed inset-0 bg-background/80 backdrop-blur-sm z-50 flex items-start justify-center p-4 overflow-y-auto">
+          <div className="bg-card border border-border w-full max-w-lg my-8 p-6 md:p-8 rounded-lg shadow-lg">
             <div className="flex items-center justify-between mb-6">
               <h2 className="font-heading text-2xl font-bold uppercase tracking-wider text-foreground">{editing ? 'Edit' : 'Add'} Banner</h2>
               <button onClick={() => setShowForm(false)}><X className="w-5 h-5 text-muted-foreground" /></button>
