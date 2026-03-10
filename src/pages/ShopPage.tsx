@@ -9,22 +9,35 @@ import Footer from '@/components/Footer';
 import { motion } from 'framer-motion';
 
 const ShopPage = () => {
-  const [searchParams, setSearchParams] = useSearchParams();
+  const { products: adminProducts } = useAdmin();
   const categoryFilter = searchParams.get('category') || '';
   const [search, setSearch] = useState('');
   const [brandFilter, setBrandFilter] = useState('');
   const [priceRange, setPriceRange] = useState<[number, number]>([0, 100]);
   const [showFilters, setShowFilters] = useState(false);
 
+  // Merge catalog + admin products
+  const allProducts: Product[] = useMemo(() => {
+    const adminAsProducts: Product[] = adminProducts
+      .filter(p => p.isActive)
+      .map(p => ({
+        ...p,
+        images: [p.image],
+        rating: 4.5,
+        reviews: 0,
+      }));
+    return [...catalogProducts, ...adminAsProducts];
+  }, [adminProducts]);
+
   const filtered = useMemo(() => {
-    return products.filter(p => {
+    return allProducts.filter(p => {
       if (categoryFilter && p.category !== categoryFilter) return false;
       if (brandFilter && p.brand !== brandFilter) return false;
       if (search && !p.name.toLowerCase().includes(search.toLowerCase()) && !p.brand.toLowerCase().includes(search.toLowerCase())) return false;
       if (p.price < priceRange[0] || p.price > priceRange[1]) return false;
       return true;
     });
-  }, [categoryFilter, brandFilter, search, priceRange]);
+  }, [allProducts, categoryFilter, brandFilter, search, priceRange]);
 
   const setCategory = (cat: string) => {
     if (cat) setSearchParams({ category: cat });
