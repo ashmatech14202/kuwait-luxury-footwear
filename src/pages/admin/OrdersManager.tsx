@@ -1,7 +1,7 @@
-import { useOrders, useUpdateOrderStatus } from '@/hooks/useDatabase';
+import { useOrders, useUpdateOrderStatus, useDeleteOrder } from '@/hooks/useDatabase';
 import { toast } from 'sonner';
 import { printInvoice, printCourierSlip } from '@/components/admin/InvoicePrint';
-import { Printer, Truck } from 'lucide-react';
+import { Printer, Truck, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 const statusColors: Record<string, string> = {
@@ -17,12 +17,21 @@ const statuses = ['pending', 'confirmed', 'shipped', 'delivered', 'cancelled'];
 const OrdersManager = () => {
   const { data: orders = [], isLoading } = useOrders();
   const updateStatus = useUpdateOrderStatus();
+  const deleteOrder = useDeleteOrder();
 
   const handleStatusChange = async (id: string, status: string) => {
     try {
       await updateStatus.mutateAsync({ id, status });
       toast.success(`Order updated to ${status}`);
     } catch { toast.error('Failed to update'); }
+  };
+
+  const handleDelete = async (id: string, orderNumber: string) => {
+    if (!window.confirm(`Are you sure you want to delete order ${orderNumber}?`)) return;
+    try {
+      await deleteOrder.mutateAsync(id);
+      toast.success(`Order ${orderNumber} deleted`);
+    } catch { toast.error('Failed to delete order'); }
   };
 
   if (isLoading) return <p className="text-center py-10 text-muted-foreground">Loading orders...</p>;
@@ -57,6 +66,9 @@ const OrdersManager = () => {
                     className="px-4 py-2 border border-border bg-background rounded-md font-body text-sm text-foreground focus:outline-none focus:border-primary">
                     {statuses.map(s => <option key={s} value={s}>{s.charAt(0).toUpperCase() + s.slice(1)}</option>)}
                   </select>
+                  <Button variant="destructive" size="sm" onClick={() => handleDelete(order.id, order.order_number)} className="gap-1.5">
+                    <Trash2 className="h-3.5 w-3.5" />
+                  </Button>
                 </div>
               </div>
               <div className="grid md:grid-cols-2 gap-4">
