@@ -65,6 +65,18 @@ const ProductPage = () => {
   const related = allProducts.filter(p => p.category === product.category && p.id !== product.id).slice(0, 4);
   const wishlisted = isInWishlist(product.id);
 
+  // Track ViewContent
+  useEffect(() => {
+    if (product) {
+      fbTrackViewContent({
+        content_ids: [product.id],
+        content_name: product.name,
+        content_category: product.category,
+        value: product.price,
+      });
+    }
+  }, [product?.id]);
+
   const handleAddToCart = () => {
     if (!selectedSize) { toast.error('Please select a size'); return; }
     if (!selectedColor) { toast.error('Please select a color'); return; }
