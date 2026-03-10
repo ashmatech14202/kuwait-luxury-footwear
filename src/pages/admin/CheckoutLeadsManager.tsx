@@ -137,7 +137,7 @@ const CheckoutLeadsManager = () => {
                   <td className="p-4">
                     <div className="flex items-center gap-2">
                       <p className="font-body text-sm font-semibold text-foreground">{lead.customer_name || '—'}</p>
-                      {lead.contacted && <CheckCircle className="w-3.5 h-3.5 text-green-500" title="Contacted" />}
+                      {lead.contacted && <CheckCircle className="w-3.5 h-3.5 text-green-500" />}
                     </div>
                     {lead.customer_email && <p className="font-body text-xs text-muted-foreground">{lead.customer_email}</p>}
                   </td>
