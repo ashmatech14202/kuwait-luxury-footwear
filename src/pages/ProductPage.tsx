@@ -18,6 +18,7 @@ const ProductPage = () => {
   const { data: variations = [] } = useProductVariations(id || '');
   const { addToCart, toggleWishlist, isInWishlist } = useCart();
   const { fbTrackViewContent, fbTrackAddToCart } = useFacebookTracking();
+  const navigate = useNavigate();
   const [selectedSize, setSelectedSize] = useState<number | null>(null);
   const [selectedColor, setSelectedColor] = useState<string>('');
   const [quantity, setQuantity] = useState(1);
