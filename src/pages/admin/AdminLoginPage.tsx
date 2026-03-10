@@ -6,12 +6,19 @@ import { toast } from 'sonner';
 import { Lock, Mail, Eye, EyeOff, Loader2 } from 'lucide-react';
 
 const AdminLoginPage = () => {
-  const { signIn, signUp } = useAdminAuth();
+  const { signIn, signUp, user, isAdmin, loading: authLoading } = useAdminAuth();
+  const navigate = useNavigate();
   const [isSignUp, setIsSignUp] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (!authLoading && user && isAdmin) {
+      navigate('/admin', { replace: true });
+    }
+  }, [user, isAdmin, authLoading, navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
