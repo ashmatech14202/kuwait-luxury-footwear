@@ -79,11 +79,15 @@ const ProductPage = () => {
   const related = allProducts.filter(p => p.category === product.category && p.id !== product.id).slice(0, 4);
   const wishlisted = isInWishlist(product.id);
 
-  const handleAddToCart = () => {
-    if (!selectedSize) { toast.error('Please select a size'); return; }
-    if (!selectedColor) { toast.error('Please select a color'); return; }
-    if (variationStock !== null && variationStock <= 0) { toast.error('This variation is out of stock'); return; }
+  const validateSelection = () => {
+    if (!selectedSize) { toast.error('Please select a size'); return false; }
+    if (!selectedColor) { toast.error('Please select a color'); return false; }
+    if (variationStock !== null && variationStock <= 0) { toast.error('This variation is out of stock'); return false; }
+    return true;
+  };
 
+  const handleAddToCart = () => {
+    if (!validateSelection()) return;
     const cartProduct = { ...product, price: displayPrice };
     addToCart(cartProduct, selectedSize, selectedColor);
     fbTrackAddToCart({
@@ -91,6 +95,13 @@ const ProductPage = () => {
       value: displayPrice * quantity, num_items: quantity,
     });
     toast.success(`${product.name} added to cart!`);
+  };
+
+  const handleBuyNow = () => {
+    if (!validateSelection()) return;
+    const cartProduct = { ...product, price: displayPrice };
+    addToCart(cartProduct, selectedSize, selectedColor);
+    navigate('/checkout');
   };
 
   return (
