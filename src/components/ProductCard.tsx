@@ -25,31 +25,40 @@ const ProductCard = ({ product }: ProductCardProps) => {
           <img
             src={product.image}
             alt={product.name}
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
             loading="lazy"
           />
+          {/* Overlay on hover */}
+          <div className="absolute inset-0 bg-neon/0 group-hover:bg-neon/5 transition-colors duration-300" />
           {product.isNew && (
-            <span className="absolute top-3 left-3 bg-gold text-accent-foreground px-3 py-1 text-xs font-body font-semibold tracking-wider uppercase">
+            <span className="absolute top-3 left-3 bg-neon text-accent-foreground px-3 py-1 text-xs font-body font-bold tracking-wider uppercase">
               New
             </span>
           )}
           {product.originalPrice && (
-            <span className="absolute top-3 right-12 bg-destructive text-destructive-foreground px-3 py-1 text-xs font-body font-semibold tracking-wider uppercase">
+            <span className="absolute top-3 left-3 bg-hot text-foreground px-3 py-1 text-xs font-body font-bold tracking-wider uppercase"
+              style={product.isNew ? { left: '4.5rem' } : {}}
+            >
               Sale
             </span>
           )}
           <button
             onClick={(e) => { e.preventDefault(); toggleWishlist(product.id); }}
-            className="absolute top-3 right-3 w-8 h-8 flex items-center justify-center bg-background/80 backdrop-blur-sm rounded-full transition-colors hover:bg-background"
+            className="absolute top-3 right-3 w-9 h-9 flex items-center justify-center bg-background/70 backdrop-blur-sm rounded-full transition-all hover:bg-background hover:scale-110"
           >
-            <Heart className={`w-4 h-4 ${wishlisted ? 'fill-gold text-gold' : 'text-foreground'}`} />
+            <Heart className={`w-4 h-4 ${wishlisted ? 'fill-neon text-neon' : 'text-foreground'}`} />
           </button>
+          {/* Brand badge */}
+          <span className="absolute bottom-3 left-3 bg-background/80 backdrop-blur-sm px-2 py-1 text-xs font-body font-semibold tracking-wider uppercase">
+            {product.brand}
+          </span>
         </div>
-        <h3 className="font-heading text-base font-medium mb-1">{product.name}</h3>
+        <h3 className="font-heading text-base font-medium uppercase tracking-wide mb-1">{product.name}</h3>
+        <p className="font-body text-xs text-muted-foreground mb-1">{product.brand}</p>
         <div className="flex items-center gap-2 font-body text-sm">
-          <span className="font-semibold">{product.price} KWD</span>
+          <span className="font-bold text-neon">{product.price} KWD</span>
           {product.originalPrice && (
-            <span className="text-muted-foreground line-through">{product.originalPrice} KWD</span>
+            <span className="text-muted-foreground line-through text-xs">{product.originalPrice} KWD</span>
           )}
         </div>
       </Link>

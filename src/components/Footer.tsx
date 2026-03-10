@@ -1,61 +1,75 @@
 import { Link } from 'react-router-dom';
-import { Instagram, Facebook, Twitter } from 'lucide-react';
+import { Instagram, Facebook, Twitter, Youtube } from 'lucide-react';
 
 const Footer = () => {
   return (
-    <footer className="bg-primary text-primary-foreground">
+    <footer className="bg-card border-t border-border">
       <div className="container mx-auto px-4 lg:px-8 py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
           {/* Brand */}
           <div>
-            <h3 className="font-heading text-2xl font-bold mb-4">
-              LUXE<span className="text-gold">STEP</span>
+            <h3 className="font-heading text-2xl font-bold tracking-wider uppercase mb-4">
+              KICK<span className="text-neon">ZONE</span>
             </h3>
-            <p className="text-primary-foreground/70 font-body text-sm leading-relaxed mb-6">
-              Premium quality shoes for men & women in Kuwait. Step into style with our curated collection.
+            <p className="text-muted-foreground font-body text-sm leading-relaxed mb-6">
+              Your ultimate destination for authentic sports footwear in Kuwait. Nike, Adidas, Puma, and more.
             </p>
             <div className="flex gap-4">
-              <a href="#" className="text-primary-foreground/60 hover:text-gold transition-colors"><Instagram className="w-5 h-5" /></a>
-              <a href="#" className="text-primary-foreground/60 hover:text-gold transition-colors"><Facebook className="w-5 h-5" /></a>
-              <a href="#" className="text-primary-foreground/60 hover:text-gold transition-colors"><Twitter className="w-5 h-5" /></a>
+              <a href="#" className="text-muted-foreground hover:text-neon transition-colors"><Instagram className="w-5 h-5" /></a>
+              <a href="#" className="text-muted-foreground hover:text-neon transition-colors"><Facebook className="w-5 h-5" /></a>
+              <a href="#" className="text-muted-foreground hover:text-neon transition-colors"><Twitter className="w-5 h-5" /></a>
+              <a href="#" className="text-muted-foreground hover:text-neon transition-colors"><Youtube className="w-5 h-5" /></a>
             </div>
           </div>
 
-          {/* Quick Links */}
+          {/* Shop */}
           <div>
-            <h4 className="font-heading text-lg font-semibold mb-4">Quick Links</h4>
-            <ul className="space-y-3 font-body text-sm text-primary-foreground/70">
-              <li><Link to="/shop" className="hover:text-gold transition-colors">Shop All</Link></li>
-              <li><Link to="/shop?category=men" className="hover:text-gold transition-colors">Men's Collection</Link></li>
-              <li><Link to="/shop?category=women" className="hover:text-gold transition-colors">Women's Collection</Link></li>
-              <li><Link to="/shop?category=sports" className="hover:text-gold transition-colors">Sports</Link></li>
+            <h4 className="font-heading text-lg font-semibold uppercase tracking-wider mb-4">Shop</h4>
+            <ul className="space-y-3 font-body text-sm text-muted-foreground">
+              <li><Link to="/shop?category=running" className="hover:text-neon transition-colors">Running</Link></li>
+              <li><Link to="/shop?category=basketball" className="hover:text-neon transition-colors">Basketball</Link></li>
+              <li><Link to="/shop?category=football" className="hover:text-neon transition-colors">Football</Link></li>
+              <li><Link to="/shop?category=lifestyle" className="hover:text-neon transition-colors">Lifestyle</Link></li>
+              <li><Link to="/shop?category=training" className="hover:text-neon transition-colors">Training</Link></li>
             </ul>
           </div>
 
-          {/* Customer Service */}
+          {/* Brands */}
           <div>
-            <h4 className="font-heading text-lg font-semibold mb-4">Customer Service</h4>
-            <ul className="space-y-3 font-body text-sm text-primary-foreground/70">
-              <li><a href="#" className="hover:text-gold transition-colors">Shipping & Delivery</a></li>
-              <li><a href="#" className="hover:text-gold transition-colors">Returns & Exchanges</a></li>
-              <li><a href="#" className="hover:text-gold transition-colors">Size Guide</a></li>
-              <li><a href="#" className="hover:text-gold transition-colors">Contact Us</a></li>
+            <h4 className="font-heading text-lg font-semibold uppercase tracking-wider mb-4">Brands</h4>
+            <ul className="space-y-3 font-body text-sm text-muted-foreground">
+              <li><Link to="/shop" className="hover:text-neon transition-colors">Nike</Link></li>
+              <li><Link to="/shop" className="hover:text-neon transition-colors">Adidas</Link></li>
+              <li><Link to="/shop" className="hover:text-neon transition-colors">Puma</Link></li>
+              <li><Link to="/shop" className="hover:text-neon transition-colors">ASICS</Link></li>
+              <li><Link to="/shop" className="hover:text-neon transition-colors">New Balance</Link></li>
             </ul>
           </div>
 
-          {/* Contact */}
+          {/* Help */}
           <div>
-            <h4 className="font-heading text-lg font-semibold mb-4">Contact</h4>
-            <ul className="space-y-3 font-body text-sm text-primary-foreground/70">
-              <li>Kuwait City, Kuwait</li>
-              <li>info@luxestep.com</li>
-              <li>+965 1234 5678</li>
+            <h4 className="font-heading text-lg font-semibold uppercase tracking-wider mb-4">Help</h4>
+            <ul className="space-y-3 font-body text-sm text-muted-foreground">
+              <li><a href="#" className="hover:text-neon transition-colors">Shipping & Delivery</a></li>
+              <li><a href="#" className="hover:text-neon transition-colors">Returns & Exchanges</a></li>
+              <li><a href="#" className="hover:text-neon transition-colors">Size Guide</a></li>
+              <li><a href="#" className="hover:text-neon transition-colors">Contact Us</a></li>
             </ul>
+            <div className="mt-6 font-body text-sm text-muted-foreground">
+              <p>Kuwait City, Kuwait</p>
+              <p>info@kickzone.kw</p>
+              <p>+965 1234 5678</p>
+            </div>
           </div>
         </div>
 
-        <div className="border-t border-primary-foreground/10 mt-12 pt-8 text-center font-body text-xs text-primary-foreground/50">
-          © 2026 LUXESTEP. All rights reserved. Cash on Delivery available across Kuwait.
+        <div className="border-t border-border mt-12 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
+          <p className="font-body text-xs text-muted-foreground">
+            © 2026 KICKZONE. All rights reserved.
+          </p>
+          <p className="font-body text-xs text-muted-foreground">
+            🇰🇼 Free delivery across Kuwait · Cash on Delivery available
+          </p>
         </div>
       </div>
     </footer>
