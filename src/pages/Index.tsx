@@ -1,12 +1,16 @@
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ArrowRight, Star, Zap, Truck, RefreshCw, Shield, ChevronRight } from 'lucide-react';
-import { categories, brands } from '@/data/products';
+import { brands } from '@/data/products';
 import { useActiveProducts } from '@/hooks/useDatabase';
+import { useActiveCategories } from '@/hooks/useCategories';
 import ProductCard from '@/components/ProductCard';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import heroImage from '@/assets/hero-sports.jpg';
+import { useState } from 'react';
+
+// Fallback images for categories without uploaded images
 import basketballImg from '@/assets/shoe-basketball.jpg';
 import runnerImg from '@/assets/shoe-runner-1.jpg';
 import footballImg from '@/assets/shoe-football.jpg';
@@ -14,7 +18,11 @@ import trainingImg from '@/assets/shoe-training.jpg';
 import lifestyleImg from '@/assets/shoe-lifestyle.jpg';
 import trailImg from '@/assets/shoe-trail.jpg';
 import womensImg from '@/assets/shoe-womens-run.jpg';
-import { useState } from 'react';
+
+const fallbackImages: Record<string, string> = {
+  running: runnerImg, basketball: basketballImg, football: footballImg,
+  training: trainingImg, lifestyle: lifestyleImg, trail: trailImg, women: womensImg,
+};
 
 const categoryImages: Record<string, string> = {
   running: runnerImg,
