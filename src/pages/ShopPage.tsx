@@ -1,8 +1,9 @@
 import { useState, useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Search, SlidersHorizontal } from 'lucide-react';
-import { categories, brands } from '@/data/products';
+import { brands } from '@/data/products';
 import { useActiveProducts } from '@/hooks/useDatabase';
+import { useActiveCategories } from '@/hooks/useCategories';
 import ProductCard from '@/components/ProductCard';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
@@ -11,6 +12,7 @@ import { motion } from 'framer-motion';
 const ShopPage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const { data: dbProducts = [], isLoading } = useActiveProducts();
+  const { data: dbCategories = [] } = useActiveCategories();
   const categoryFilter = searchParams.get('category') || '';
   const [search, setSearch] = useState('');
   const [brandFilter, setBrandFilter] = useState('');
@@ -19,21 +21,12 @@ const ShopPage = () => {
 
   const products = useMemo(() => {
     return dbProducts.map(p => ({
-      id: p.id,
-      name: p.name,
-      brand: p.brand,
-      price: Number(p.price),
+      id: p.id, name: p.name, brand: p.brand, price: Number(p.price),
       originalPrice: p.original_price ? Number(p.original_price) : undefined,
-      category: p.category as any,
-      image: p.image,
-      images: p.images || [p.image],
-      sizes: p.sizes || [],
-      colors: p.colors || [],
-      description: p.description || '',
-      rating: Number(p.rating) || 4.5,
-      reviews: p.reviews || 0,
-      isTrending: p.is_trending || false,
-      isNew: p.is_new || false,
+      category: p.category as any, image: p.image, images: p.images || [p.image],
+      sizes: p.sizes || [], colors: p.colors || [], description: p.description || '',
+      rating: Number(p.rating) || 4.5, reviews: p.reviews || 0,
+      isTrending: p.is_trending || false, isNew: p.is_new || false,
     }));
   }, [dbProducts]);
 
@@ -52,6 +45,8 @@ const ShopPage = () => {
     else setSearchParams({});
   };
 
+  const activeCategoryName = dbCategories.find(c => c.slug === categoryFilter)?.name;
+
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
@@ -61,7 +56,7 @@ const ShopPage = () => {
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
               <span className="text-neon font-body text-sm font-bold tracking-[0.3em] uppercase">Collection</span>
               <h1 className="heading-display text-4xl md:text-6xl font-bold mt-2 text-foreground">
-                {categoryFilter ? categories.find(c => c.id === categoryFilter)?.name || 'Shop' : 'All Products'}
+                {activeCategoryName || (categoryFilter ? categoryFilter.charAt(0).toUpperCase() + categoryFilter.slice(1) : 'All Products')}
               </h1>
             </motion.div>
           </div>
@@ -90,10 +85,11 @@ const ShopPage = () => {
                       className={`block w-full text-left font-body text-sm py-1.5 transition-colors ${!categoryFilter ? 'text-neon font-semibold' : 'text-muted-foreground hover:text-foreground'}`}>
                       All Products
                     </button>
-                    {categories.map(cat => (
-                      <button key={cat.id} onClick={() => setCategory(cat.id)}
-                        className={`block w-full text-left font-body text-sm py-1.5 transition-colors ${categoryFilter === cat.id ? 'text-neon font-semibold' : 'text-muted-foreground hover:text-foreground'}`}>
-                        {cat.emoji} {cat.name}
+                    {dbCategories.map(cat => (
+                      <button key={cat.id} onClick={() => setCategory(cat.slug)}
+                        className={`block w-full text-left font-body text-sm py-1.5 transition-colors ${categoryFilter === cat.slug ? 'text-neon font-semibold' : 'text-muted-foreground hover:text-foreground'}`}>
+                        {cat.image_url && <img src={cat.image_url} alt="" className="w-4 h-4 inline-block mr-2 rounded object-cover" />}
+                        {cat.name}
                       </button>
                     ))}
                   </div>

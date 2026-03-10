@@ -1,11 +1,16 @@
 import { Link } from 'react-router-dom';
 import { ShoppingBag, Heart, Search, Menu, X } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
+import { useActiveCategories } from '@/hooks/useCategories';
 import { useState } from 'react';
 
 const Navbar = () => {
   const { cartCount } = useCart();
+  const { data: categories = [] } = useActiveCategories();
   const [mobileOpen, setMobileOpen] = useState(false);
+
+  // Show top-level categories (no parent) in nav, limit to 3
+  const topCategories = categories.filter(c => !c.parent_id).slice(0, 3);
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-md border-b border-border">
@@ -18,9 +23,11 @@ const Navbar = () => {
           <div className="hidden md:flex items-center gap-8 font-body text-sm tracking-widest uppercase font-medium text-foreground">
             <Link to="/" className="hover-neon transition-colors duration-300">Home</Link>
             <Link to="/shop" className="hover-neon transition-colors duration-300">Shop</Link>
-            <Link to="/shop?category=running" className="hover-neon transition-colors duration-300">Running</Link>
-            <Link to="/shop?category=basketball" className="hover-neon transition-colors duration-300">Basketball</Link>
-            <Link to="/shop?category=football" className="hover-neon transition-colors duration-300">Football</Link>
+            {topCategories.map(cat => (
+              <Link key={cat.id} to={`/shop?category=${cat.slug}`} className="hover-neon transition-colors duration-300">
+                {cat.name}
+              </Link>
+            ))}
           </div>
 
           <div className="flex items-center gap-4 text-foreground">
@@ -46,9 +53,11 @@ const Navbar = () => {
           <div className="flex flex-col px-4 py-6 gap-4 font-body text-sm tracking-widest uppercase font-medium text-foreground">
             <Link to="/" onClick={() => setMobileOpen(false)} className="hover-neon transition-colors py-2">Home</Link>
             <Link to="/shop" onClick={() => setMobileOpen(false)} className="hover-neon transition-colors py-2">Shop</Link>
-            <Link to="/shop?category=running" onClick={() => setMobileOpen(false)} className="hover-neon transition-colors py-2">Running</Link>
-            <Link to="/shop?category=basketball" onClick={() => setMobileOpen(false)} className="hover-neon transition-colors py-2">Basketball</Link>
-            <Link to="/shop?category=football" onClick={() => setMobileOpen(false)} className="hover-neon transition-colors py-2">Football</Link>
+            {topCategories.map(cat => (
+              <Link key={cat.id} to={`/shop?category=${cat.slug}`} onClick={() => setMobileOpen(false)} className="hover-neon transition-colors py-2">
+                {cat.name}
+              </Link>
+            ))}
           </div>
         </div>
       )}

@@ -1,12 +1,16 @@
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ArrowRight, Star, Zap, Truck, RefreshCw, Shield, ChevronRight } from 'lucide-react';
-import { categories, brands } from '@/data/products';
+import { brands } from '@/data/products';
 import { useActiveProducts } from '@/hooks/useDatabase';
+import { useActiveCategories } from '@/hooks/useCategories';
 import ProductCard from '@/components/ProductCard';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import heroImage from '@/assets/hero-sports.jpg';
+import { useState } from 'react';
+
+// Fallback images for categories without uploaded images
 import basketballImg from '@/assets/shoe-basketball.jpg';
 import runnerImg from '@/assets/shoe-runner-1.jpg';
 import footballImg from '@/assets/shoe-football.jpg';
@@ -14,17 +18,13 @@ import trainingImg from '@/assets/shoe-training.jpg';
 import lifestyleImg from '@/assets/shoe-lifestyle.jpg';
 import trailImg from '@/assets/shoe-trail.jpg';
 import womensImg from '@/assets/shoe-womens-run.jpg';
-import { useState } from 'react';
 
-const categoryImages: Record<string, string> = {
-  running: runnerImg,
-  basketball: basketballImg,
-  football: footballImg,
-  training: trainingImg,
-  lifestyle: lifestyleImg,
-  trail: trailImg,
-  women: womensImg,
+const fallbackImages: Record<string, string> = {
+  running: runnerImg, basketball: basketballImg, football: footballImg,
+  training: trainingImg, lifestyle: lifestyleImg, trail: trailImg, women: womensImg,
 };
+
+// removed static categoryImages - now using dynamic categories
 
 const reviews = [
   { name: 'Khalid A.', text: 'Authentic products, fast shipping. Best sneaker store in Kuwait!', rating: 5 },
@@ -34,6 +34,7 @@ const reviews = [
 
 const Index = () => {
   const { data: dbProducts = [] } = useActiveProducts();
+  const { data: dbCategories = [] } = useActiveCategories();
   const products = dbProducts.map(p => ({
     id: p.id, name: p.name, brand: p.brand, price: Number(p.price),
     originalPrice: p.original_price ? Number(p.original_price) : undefined,
@@ -45,6 +46,13 @@ const Index = () => {
   const trendingProducts = products.filter(p => p.isTrending);
   const newProducts = products.filter(p => p.isNew);
   const [email, setEmail] = useState('');
+
+  const getCategoryImage = (slug: string, imageUrl: string | null) =>
+    imageUrl || fallbackImages[slug] || runnerImg;
+
+  // Count products per category
+  const getCategoryCount = (slug: string) =>
+    products.filter(p => p.category === slug).length;
 
   return (
     <div className="min-h-screen bg-background">
@@ -133,7 +141,7 @@ const Index = () => {
             </Link>
           </motion.div>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            {categories.slice(0, 4).map((cat, i) => (
+            {dbCategories.slice(0, 4).map((cat, i) => (
               <motion.div
                 key={cat.id}
                 initial={{ opacity: 0, y: 20 }}
@@ -142,46 +150,46 @@ const Index = () => {
                 transition={{ delay: i * 0.1 }}
               >
                 <Link
-                  to={`/shop?category=${cat.id}`}
+                  to={`/shop?category=${cat.slug}`}
                   className="block group relative aspect-[4/5] overflow-hidden rounded-lg"
                 >
-                  <img src={categoryImages[cat.id]} alt={cat.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" loading="lazy" />
+                  <img src={getCategoryImage(cat.slug, cat.image_url)} alt={cat.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" loading="lazy" />
                   <div className="absolute inset-0 bg-gradient-to-t from-primary/80 via-primary/20 to-transparent" />
                   <div className="absolute inset-0 border-2 border-transparent group-hover:border-neon/50 transition-colors duration-300 rounded-lg" />
                   <div className="absolute bottom-0 left-0 right-0 p-5">
-                    <p className="text-3xl mb-1">{cat.emoji}</p>
                     <h3 className="font-heading text-xl md:text-2xl font-bold uppercase tracking-wide text-primary-foreground">{cat.name}</h3>
-                    <p className="font-body text-xs text-primary-foreground/60 mt-1">{cat.count} Products</p>
+                    <p className="font-body text-xs text-primary-foreground/60 mt-1">{getCategoryCount(cat.slug)} Products</p>
                   </div>
                 </Link>
               </motion.div>
             ))}
           </div>
-          <div className="grid grid-cols-3 gap-4 mt-4">
-            {categories.slice(4).map((cat, i) => (
-              <motion.div
-                key={cat.id}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.1 }}
-              >
-                <Link
-                  to={`/shop?category=${cat.id}`}
-                  className="block group relative aspect-[16/9] overflow-hidden rounded-lg"
+          {dbCategories.length > 4 && (
+            <div className="grid grid-cols-3 gap-4 mt-4">
+              {dbCategories.slice(4).map((cat, i) => (
+                <motion.div
+                  key={cat.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.1 }}
                 >
-                  <img src={categoryImages[cat.id]} alt={cat.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" loading="lazy" />
-                  <div className="absolute inset-0 bg-gradient-to-t from-primary/80 via-primary/30 to-transparent" />
-                  <div className="absolute inset-0 border-2 border-transparent group-hover:border-neon/50 transition-colors duration-300 rounded-lg" />
-                  <div className="absolute bottom-0 left-0 right-0 p-4">
-                    <p className="text-2xl mb-1">{cat.emoji}</p>
-                    <h3 className="font-heading text-lg font-bold uppercase tracking-wide text-primary-foreground">{cat.name}</h3>
-                    <p className="font-body text-xs text-primary-foreground/60">{cat.count} Products</p>
-                  </div>
-                </Link>
-              </motion.div>
-            ))}
-          </div>
+                  <Link
+                    to={`/shop?category=${cat.slug}`}
+                    className="block group relative aspect-[16/9] overflow-hidden rounded-lg"
+                  >
+                    <img src={getCategoryImage(cat.slug, cat.image_url)} alt={cat.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" loading="lazy" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-primary/80 via-primary/30 to-transparent" />
+                    <div className="absolute inset-0 border-2 border-transparent group-hover:border-neon/50 transition-colors duration-300 rounded-lg" />
+                    <div className="absolute bottom-0 left-0 right-0 p-4">
+                      <h3 className="font-heading text-lg font-bold uppercase tracking-wide text-primary-foreground">{cat.name}</h3>
+                      <p className="font-body text-xs text-primary-foreground/60">{getCategoryCount(cat.slug)} Products</p>
+                    </div>
+                  </Link>
+                </motion.div>
+              ))}
+            </div>
+          )}
         </div>
       </section>
 

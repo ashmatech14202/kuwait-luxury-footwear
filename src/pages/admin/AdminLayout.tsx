@@ -1,11 +1,12 @@
 import { Link, Outlet, useLocation } from 'react-router-dom';
-import { LayoutDashboard, Package, ShoppingCart, Tag, Image, Settings, Users, BarChart3, ChevronLeft, Menu, Megaphone, LogOut } from 'lucide-react';
+import { LayoutDashboard, Package, ShoppingCart, Tag, Image, Settings, Users, BarChart3, ChevronLeft, Menu, Megaphone, LogOut, FolderTree } from 'lucide-react';
 import { useState } from 'react';
 import { useAdminAuth } from '@/hooks/useAdminAuth';
 
 const navItems = [
   { path: '/admin', label: 'Dashboard', icon: LayoutDashboard, exact: true },
   { path: '/admin/products', label: 'Products', icon: Package },
+  { path: '/admin/categories', label: 'Categories', icon: FolderTree },
   { path: '/admin/orders', label: 'Orders', icon: ShoppingCart },
   { path: '/admin/coupons', label: 'Coupons', icon: Tag },
   { path: '/admin/banners', label: 'Banners', icon: Image },

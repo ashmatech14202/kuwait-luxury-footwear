@@ -20,6 +20,7 @@ import Dashboard from "./pages/admin/Dashboard.tsx";
 import ProductsManager from "./pages/admin/ProductsManager.tsx";
 import OrdersManager from "./pages/admin/OrdersManager.tsx";
 import CouponsManager from "./pages/admin/CouponsManager.tsx";
+import CategoriesManager from "./pages/admin/CategoriesManager.tsx";
 import BannersManager from "./pages/admin/BannersManager.tsx";
 import AnalyticsPage from "./pages/admin/AnalyticsPage.tsx";
 import CustomersPage from "./pages/admin/CustomersPage.tsx";
@@ -53,6 +54,7 @@ const App = () => (
                 <Route index element={<Dashboard />} />
                 <Route path="products" element={<ProductsManager />} />
                 <Route path="orders" element={<OrdersManager />} />
+                <Route path="categories" element={<CategoriesManager />} />
                 <Route path="coupons" element={<CouponsManager />} />
                 <Route path="banners" element={<BannersManager />} />
                 <Route path="analytics" element={<AnalyticsPage />} />
