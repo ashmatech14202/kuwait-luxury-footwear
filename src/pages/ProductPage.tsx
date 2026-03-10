@@ -134,7 +134,7 @@ const ProductPage = () => {
 
               <div className="space-y-3 border-t border-border pt-6">
                 {[
-                  { icon: Shield, text: '100% Authentic - Verified by KICKZONE' },
+                  { icon: Shield, text: '100% Authentic - Verified by SRK Collection' },
                   { icon: Truck, text: 'Free delivery across Kuwait on orders over 30 KWD' },
                   { icon: RefreshCw, text: '30-day easy return policy' },
                   { icon: Zap, text: 'Cash on Delivery available' },

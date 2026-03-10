@@ -27,9 +27,9 @@ const AdminLayout = () => {
       <aside className={`${collapsed ? 'w-16' : 'w-64'} bg-sidebar border-r border-sidebar-border flex flex-col shrink-0 transition-all duration-300 fixed h-full z-40`}>
         <div className="h-16 flex items-center justify-between px-4 border-b border-sidebar-border">
           {!collapsed && (
-            <Link to="/admin" className="font-heading text-xl font-bold tracking-wider uppercase text-sidebar-foreground">
-              KICK<span className="text-sidebar-primary">ZONE</span>
-              <span className="text-xs text-sidebar-foreground/60 block font-body font-normal tracking-normal normal-case">Admin Panel</span>
+            <Link to="/admin" className="flex items-center gap-2">
+              <img src="/logo.png" alt="SRK Collection" className="h-10 w-auto brightness-0 invert" />
+              <span className="text-xs text-sidebar-foreground/60 font-body font-normal">Admin</span>
             </Link>
           )}
           <button onClick={() => setCollapsed(!collapsed)} className="text-sidebar-foreground/60 hover:text-sidebar-foreground transition-colors">

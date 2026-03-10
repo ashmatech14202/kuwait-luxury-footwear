@@ -7,9 +7,7 @@ const Footer = () => {
       <div className="container mx-auto px-4 lg:px-8 py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
           <div>
-            <h3 className="font-heading text-2xl font-bold tracking-wider uppercase mb-4">
-              KICK<span className="text-neon">ZONE</span>
-            </h3>
+            <img src="/logo.png" alt="SRK Collection" className="h-14 w-auto mb-4" />
             <p className="text-primary-foreground/60 font-body text-sm leading-relaxed mb-6">
               Your ultimate destination for authentic sports footwear in Kuwait. Nike, Adidas, Puma, and more.
             </p>
@@ -53,14 +51,14 @@ const Footer = () => {
             </ul>
             <div className="mt-6 font-body text-sm text-primary-foreground/40">
               <p>Kuwait City, Kuwait</p>
-              <p>info@kickzone.kw</p>
+              <p>info@srkcollection.kw</p>
               <p>+965 1234 5678</p>
             </div>
           </div>
         </div>
 
         <div className="border-t border-primary-foreground/10 mt-12 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
-          <p className="font-body text-xs text-primary-foreground/40">© 2026 KICKZONE. All rights reserved.</p>
+          <p className="font-body text-xs text-primary-foreground/40">© 2026 SRK Collection. All rights reserved.</p>
           <p className="font-body text-xs text-primary-foreground/40">🇰🇼 Free delivery across Kuwait · Cash on Delivery available</p>
         </div>
       </div>

@@ -11,8 +11,8 @@ const Navbar = () => {
     <nav className="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-md border-b border-border">
       <div className="container mx-auto px-4 lg:px-8">
         <div className="flex items-center justify-between h-16 lg:h-20">
-          <Link to="/" className="font-heading text-2xl lg:text-3xl font-bold tracking-wider uppercase text-foreground">
-            KICK<span className="text-neon">ZONE</span>
+          <Link to="/" className="flex items-center gap-2">
+            <img src="/logo.png" alt="SRK Collection" className="h-10 lg:h-12 w-auto" />
           </Link>
 
           <div className="hidden md:flex items-center gap-8 font-body text-sm tracking-widest uppercase font-medium text-foreground">
