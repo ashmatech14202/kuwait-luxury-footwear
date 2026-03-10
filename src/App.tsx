@@ -64,6 +64,7 @@ const App = () => (
                 <Route path="checkout-leads" element={<CheckoutLeadsManager />} />
                 <Route path="banners" element={<BannersManager />} />
                 <Route path="analytics" element={<AnalyticsPage />} />
+                <Route path="visitor-analytics" element={<VisitorAnalyticsPage />} />
                 <Route path="customers" element={<CustomersPage />} />
                 <Route path="settings" element={<SettingsPage />} />
                 <Route path="marketing" element={<MarketingTrackingPage />} />
