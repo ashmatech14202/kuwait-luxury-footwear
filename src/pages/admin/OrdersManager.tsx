@@ -66,6 +66,9 @@ const OrdersManager = () => {
                     className="px-4 py-2 border border-border bg-background rounded-md font-body text-sm text-foreground focus:outline-none focus:border-primary">
                     {statuses.map(s => <option key={s} value={s}>{s.charAt(0).toUpperCase() + s.slice(1)}</option>)}
                   </select>
+                  <Button variant="destructive" size="sm" onClick={() => handleDelete(order.id, order.order_number)} className="gap-1.5">
+                    <Trash2 className="h-3.5 w-3.5" />
+                  </Button>
                 </div>
               </div>
               <div className="grid md:grid-cols-2 gap-4">
