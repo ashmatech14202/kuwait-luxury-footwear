@@ -33,6 +33,9 @@ import ReviewsManager from "./pages/admin/ReviewsManager.tsx";
 import CustomersPage from "./pages/admin/CustomersPage.tsx";
 import SettingsPage from "./pages/admin/SettingsPage.tsx";
 import MarketingTrackingPage from "./pages/admin/MarketingTrackingPage.tsx";
+import PagesManager from "./pages/admin/PagesManager.tsx";
+import AboutPage from "./pages/AboutPage.tsx";
+import ContactPage from "./pages/ContactPage.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
 const queryClient = new QueryClient();
@@ -53,6 +56,8 @@ const App = () => (
               <Route path="/cart" element={<CartPage />} />
               <Route path="/checkout" element={<CheckoutPage />} />
               <Route path="/wishlist" element={<WishlistPage />} />
+              <Route path="/about" element={<AboutPage />} />
+              <Route path="/contact" element={<ContactPage />} />
               <Route path="/admin/login" element={<AdminLoginPage />} />
               <Route path="/admin" element={
                 <ProtectedAdminRoute>
@@ -74,6 +79,7 @@ const App = () => (
                 <Route path="marketing" element={<MarketingTrackingPage />} />
                 <Route path="shipping" element={<ShippingMethodsManager />} />
                 <Route path="reviews" element={<ReviewsManager />} />
+                <Route path="pages" element={<PagesManager />} />
               </Route>
               <Route path="*" element={<NotFound />} />
             </Routes>
