@@ -23,6 +23,7 @@ const ShopPage = () => {
       .filter(p => p.isActive)
       .map(p => ({
         ...p,
+        category: p.category as Product['category'],
         images: [p.image],
         rating: 4.5,
         reviews: 0,
