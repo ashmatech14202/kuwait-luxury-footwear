@@ -27,6 +27,7 @@ import CategoriesManager from "./pages/admin/CategoriesManager.tsx";
 import BannersManager from "./pages/admin/BannersManager.tsx";
 import AnalyticsPage from "./pages/admin/AnalyticsPage.tsx";
 import VisitorAnalyticsPage from "./pages/admin/VisitorAnalyticsPage.tsx";
+import ShippingMethodsManager from "./pages/admin/ShippingMethodsManager.tsx";
 import CustomersPage from "./pages/admin/CustomersPage.tsx";
 import SettingsPage from "./pages/admin/SettingsPage.tsx";
 import MarketingTrackingPage from "./pages/admin/MarketingTrackingPage.tsx";
