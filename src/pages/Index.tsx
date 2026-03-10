@@ -141,7 +141,7 @@ const Index = () => {
             </Link>
           </motion.div>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            {categories.slice(0, 4).map((cat, i) => (
+            {dbCategories.slice(0, 4).map((cat, i) => (
               <motion.div
                 key={cat.id}
                 initial={{ opacity: 0, y: 20 }}
@@ -150,46 +150,46 @@ const Index = () => {
                 transition={{ delay: i * 0.1 }}
               >
                 <Link
-                  to={`/shop?category=${cat.id}`}
+                  to={`/shop?category=${cat.slug}`}
                   className="block group relative aspect-[4/5] overflow-hidden rounded-lg"
                 >
-                  <img src={categoryImages[cat.id]} alt={cat.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" loading="lazy" />
+                  <img src={getCategoryImage(cat.slug, cat.image_url)} alt={cat.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" loading="lazy" />
                   <div className="absolute inset-0 bg-gradient-to-t from-primary/80 via-primary/20 to-transparent" />
                   <div className="absolute inset-0 border-2 border-transparent group-hover:border-neon/50 transition-colors duration-300 rounded-lg" />
                   <div className="absolute bottom-0 left-0 right-0 p-5">
-                    <p className="text-3xl mb-1">{cat.emoji}</p>
                     <h3 className="font-heading text-xl md:text-2xl font-bold uppercase tracking-wide text-primary-foreground">{cat.name}</h3>
-                    <p className="font-body text-xs text-primary-foreground/60 mt-1">{cat.count} Products</p>
+                    <p className="font-body text-xs text-primary-foreground/60 mt-1">{getCategoryCount(cat.slug)} Products</p>
                   </div>
                 </Link>
               </motion.div>
             ))}
           </div>
-          <div className="grid grid-cols-3 gap-4 mt-4">
-            {categories.slice(4).map((cat, i) => (
-              <motion.div
-                key={cat.id}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.1 }}
-              >
-                <Link
-                  to={`/shop?category=${cat.id}`}
-                  className="block group relative aspect-[16/9] overflow-hidden rounded-lg"
+          {dbCategories.length > 4 && (
+            <div className="grid grid-cols-3 gap-4 mt-4">
+              {dbCategories.slice(4).map((cat, i) => (
+                <motion.div
+                  key={cat.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.1 }}
                 >
-                  <img src={categoryImages[cat.id]} alt={cat.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" loading="lazy" />
-                  <div className="absolute inset-0 bg-gradient-to-t from-primary/80 via-primary/30 to-transparent" />
-                  <div className="absolute inset-0 border-2 border-transparent group-hover:border-neon/50 transition-colors duration-300 rounded-lg" />
-                  <div className="absolute bottom-0 left-0 right-0 p-4">
-                    <p className="text-2xl mb-1">{cat.emoji}</p>
-                    <h3 className="font-heading text-lg font-bold uppercase tracking-wide text-primary-foreground">{cat.name}</h3>
-                    <p className="font-body text-xs text-primary-foreground/60">{cat.count} Products</p>
-                  </div>
-                </Link>
-              </motion.div>
-            ))}
-          </div>
+                  <Link
+                    to={`/shop?category=${cat.slug}`}
+                    className="block group relative aspect-[16/9] overflow-hidden rounded-lg"
+                  >
+                    <img src={getCategoryImage(cat.slug, cat.image_url)} alt={cat.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" loading="lazy" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-primary/80 via-primary/30 to-transparent" />
+                    <div className="absolute inset-0 border-2 border-transparent group-hover:border-neon/50 transition-colors duration-300 rounded-lg" />
+                    <div className="absolute bottom-0 left-0 right-0 p-4">
+                      <h3 className="font-heading text-lg font-bold uppercase tracking-wide text-primary-foreground">{cat.name}</h3>
+                      <p className="font-body text-xs text-primary-foreground/60">{getCategoryCount(cat.slug)} Products</p>
+                    </div>
+                  </Link>
+                </motion.div>
+              ))}
+            </div>
+          )}
         </div>
       </section>
 
