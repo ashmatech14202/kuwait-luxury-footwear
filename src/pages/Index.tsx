@@ -1,14 +1,14 @@
 import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import { ArrowRight, Star, Zap, Truck, RefreshCw, Shield, ChevronRight } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { ArrowRight, Star, Zap, Truck, RefreshCw, Shield, ChevronRight, ChevronLeft } from 'lucide-react';
 import { brands } from '@/data/products';
-import { useActiveProducts } from '@/hooks/useDatabase';
+import { useActiveProducts, useActiveBanners } from '@/hooks/useDatabase';
 import { useActiveCategories } from '@/hooks/useCategories';
 import ProductCard from '@/components/ProductCard';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import heroImage from '@/assets/hero-sports.jpg';
-import { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 
 // Fallback images for categories without uploaded images
 import basketballImg from '@/assets/shoe-basketball.jpg';
