@@ -85,12 +85,12 @@ interface AdminContextType {
 }
 
 const defaultSettings: SiteSettings = {
-  siteName: 'KICKZONE',
+  siteName: 'SRK Collection',
   siteDescription: 'Premium sports shoes in Kuwait',
-  metaTitle: 'KICKZONE - Premium Sports Shoes in Kuwait',
+  metaTitle: 'SRK Collection - Premium Sports Shoes in Kuwait',
   metaDescription: 'Shop authentic Nike, Adidas, Puma sports shoes in Kuwait. Fast delivery and COD.',
   whatsappNumber: '+96512345678',
-  instagramHandle: 'kickzonekw',
+  instagramHandle: 'srkcollectionkw',
   freeShippingThreshold: 30,
   currency: 'KWD',
 };
