@@ -32,6 +32,17 @@ const CheckoutPage = () => {
   const shipping = cartTotal >= 30 ? 0 : 3;
   const total = cartTotal + shipping;
 
+  // Track InitiateCheckout on mount
+  useEffect(() => {
+    if (items.length > 0) {
+      fbTrackInitiateCheckout({
+        content_ids: items.map(i => i.product.id),
+        value: cartTotal,
+        num_items: items.reduce((s, i) => s + i.quantity, 0),
+      });
+    }
+  }, []);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setForm(prev => ({ ...prev, [e.target.name]: e.target.value }));
   };
