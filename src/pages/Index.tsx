@@ -21,7 +21,7 @@ const categoryImages: Record<string, string> = {
 };
 
 const reviews = [
-  { name: 'Ahmed K.', text: 'The quality is exceptional. Best shoes I've bought in Kuwait!', rating: 5 },
+  { name: 'Ahmed K.', text: 'The quality is exceptional. Best shoes I have bought in Kuwait!', rating: 5 },
   { name: 'Sara M.', text: 'Beautiful design and very comfortable. Fast delivery too.', rating: 5 },
   { name: 'Omar H.', text: 'Premium quality at a fair price. Highly recommend LUXESTEP.', rating: 4 },
 ];
