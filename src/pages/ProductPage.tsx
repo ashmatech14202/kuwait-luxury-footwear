@@ -1,4 +1,4 @@
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useState, useMemo, useEffect } from 'react';
 import { Star, Heart, Minus, Plus, Truck, RefreshCw, Shield, Zap } from 'lucide-react';
 import { useActiveProducts } from '@/hooks/useDatabase';
@@ -18,6 +18,7 @@ const ProductPage = () => {
   const { data: variations = [] } = useProductVariations(id || '');
   const { addToCart, toggleWishlist, isInWishlist } = useCart();
   const { fbTrackViewContent, fbTrackAddToCart } = useFacebookTracking();
+  const navigate = useNavigate();
   const [selectedSize, setSelectedSize] = useState<number | null>(null);
   const [selectedColor, setSelectedColor] = useState<string>('');
   const [quantity, setQuantity] = useState(1);
@@ -78,11 +79,15 @@ const ProductPage = () => {
   const related = allProducts.filter(p => p.category === product.category && p.id !== product.id).slice(0, 4);
   const wishlisted = isInWishlist(product.id);
 
-  const handleAddToCart = () => {
-    if (!selectedSize) { toast.error('Please select a size'); return; }
-    if (!selectedColor) { toast.error('Please select a color'); return; }
-    if (variationStock !== null && variationStock <= 0) { toast.error('This variation is out of stock'); return; }
+  const validateSelection = () => {
+    if (!selectedSize) { toast.error('Please select a size'); return false; }
+    if (!selectedColor) { toast.error('Please select a color'); return false; }
+    if (variationStock !== null && variationStock <= 0) { toast.error('This variation is out of stock'); return false; }
+    return true;
+  };
 
+  const handleAddToCart = () => {
+    if (!validateSelection()) return;
     const cartProduct = { ...product, price: displayPrice };
     addToCart(cartProduct, selectedSize, selectedColor);
     fbTrackAddToCart({
@@ -90,6 +95,13 @@ const ProductPage = () => {
       value: displayPrice * quantity, num_items: quantity,
     });
     toast.success(`${product.name} added to cart!`);
+  };
+
+  const handleBuyNow = () => {
+    if (!validateSelection()) return;
+    const cartProduct = { ...product, price: displayPrice };
+    addToCart(cartProduct, selectedSize, selectedColor);
+    navigate('/checkout');
   };
 
   return (
@@ -195,6 +207,12 @@ const ProductPage = () => {
                   <Heart className={`w-5 h-5 ${wishlisted ? 'fill-neon text-neon' : 'text-foreground'}`} />
                 </button>
               </div>
+
+              <button onClick={handleBuyNow}
+                disabled={variationStock !== null && variationStock <= 0}
+                className="w-full h-12 bg-foreground text-background font-body text-sm font-bold tracking-wider uppercase hover:bg-foreground/90 transition-all duration-300 rounded-sm disabled:opacity-50 disabled:cursor-not-allowed mb-8">
+                Buy Now
+              </button>
 
               <div className="space-y-3 border-t border-border pt-6">
                 {[
