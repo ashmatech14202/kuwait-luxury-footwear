@@ -1,7 +1,8 @@
 import { useState, useMemo } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
 import { Search, SlidersHorizontal } from 'lucide-react';
-import { products, categories, brands } from '@/data/products';
+import { products as catalogProducts, categories, brands, Product } from '@/data/products';
+import { useAdmin } from '@/context/AdminContext';
 import ProductCard from '@/components/ProductCard';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
