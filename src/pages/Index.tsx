@@ -34,6 +34,7 @@ const reviews = [
 
 const Index = () => {
   const { data: dbProducts = [] } = useActiveProducts();
+  const { data: dbCategories = [] } = useActiveCategories();
   const products = dbProducts.map(p => ({
     id: p.id, name: p.name, brand: p.brand, price: Number(p.price),
     originalPrice: p.original_price ? Number(p.original_price) : undefined,
@@ -45,6 +46,13 @@ const Index = () => {
   const trendingProducts = products.filter(p => p.isTrending);
   const newProducts = products.filter(p => p.isNew);
   const [email, setEmail] = useState('');
+
+  const getCategoryImage = (slug: string, imageUrl: string | null) =>
+    imageUrl || fallbackImages[slug] || runnerImg;
+
+  // Count products per category
+  const getCategoryCount = (slug: string) =>
+    products.filter(p => p.category === slug).length;
 
   return (
     <div className="min-h-screen bg-background">
