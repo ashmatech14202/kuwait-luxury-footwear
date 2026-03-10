@@ -24,15 +24,7 @@ const fallbackImages: Record<string, string> = {
   training: trainingImg, lifestyle: lifestyleImg, trail: trailImg, women: womensImg,
 };
 
-const categoryImages: Record<string, string> = {
-  running: runnerImg,
-  basketball: basketballImg,
-  football: footballImg,
-  training: trainingImg,
-  lifestyle: lifestyleImg,
-  trail: trailImg,
-  women: womensImg,
-};
+// removed static categoryImages - now using dynamic categories
 
 const reviews = [
   { name: 'Khalid A.', text: 'Authentic products, fast shipping. Best sneaker store in Kuwait!', rating: 5 },
