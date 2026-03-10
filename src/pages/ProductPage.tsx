@@ -8,6 +8,7 @@ import { useFacebookTracking } from '@/hooks/useFacebookTracking';
 import ProductCard from '@/components/ProductCard';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
+import ProductReviews from '@/components/ProductReviews';
 import { motion } from 'framer-motion';
 import { toast } from 'sonner';
 
