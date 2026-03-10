@@ -1,7 +1,8 @@
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ArrowRight, Star, Zap, Truck, RefreshCw, Shield, ChevronRight } from 'lucide-react';
-import { products, categories, brands } from '@/data/products';
+import { categories, brands } from '@/data/products';
+import { useActiveProducts } from '@/hooks/useDatabase';
 import ProductCard from '@/components/ProductCard';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
