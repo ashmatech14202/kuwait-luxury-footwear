@@ -208,6 +208,12 @@ const ProductPage = () => {
                 </button>
               </div>
 
+              <button onClick={handleBuyNow}
+                disabled={variationStock !== null && variationStock <= 0}
+                className="w-full h-12 bg-foreground text-background font-body text-sm font-bold tracking-wider uppercase hover:bg-foreground/90 transition-all duration-300 rounded-sm disabled:opacity-50 disabled:cursor-not-allowed mb-8">
+                Buy Now
+              </button>
+
               <div className="space-y-3 border-t border-border pt-6">
                 {[
                   { icon: Shield, text: '100% Authentic - Verified by SRK Collection' },
