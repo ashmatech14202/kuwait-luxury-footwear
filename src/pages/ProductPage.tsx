@@ -1,4 +1,4 @@
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useState, useMemo, useEffect } from 'react';
 import { Star, Heart, Minus, Plus, Truck, RefreshCw, Shield, Zap } from 'lucide-react';
 import { useActiveProducts } from '@/hooks/useDatabase';
