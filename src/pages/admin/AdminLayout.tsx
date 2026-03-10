@@ -1,5 +1,5 @@
 import { Link, Outlet, useLocation } from 'react-router-dom';
-import { LayoutDashboard, Package, ShoppingCart, Tag, Image, Settings, Users, BarChart3, ChevronLeft, Menu } from 'lucide-react';
+import { LayoutDashboard, Package, ShoppingCart, Tag, Image, Settings, Users, BarChart3, ChevronLeft, Menu, Megaphone } from 'lucide-react';
 import { useState } from 'react';
 
 const navItems = [
@@ -10,6 +10,7 @@ const navItems = [
   { path: '/admin/banners', label: 'Banners', icon: Image },
   { path: '/admin/analytics', label: 'Analytics', icon: BarChart3 },
   { path: '/admin/customers', label: 'Customers', icon: Users },
+  { path: '/admin/marketing', label: 'Marketing', icon: Megaphone },
   { path: '/admin/settings', label: 'Settings', icon: Settings },
 ];
 

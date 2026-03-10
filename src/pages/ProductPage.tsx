@@ -1,8 +1,9 @@
 import { useParams, Link } from 'react-router-dom';
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { Star, Heart, Minus, Plus, Truck, RefreshCw, Shield, Zap } from 'lucide-react';
 import { useActiveProducts } from '@/hooks/useDatabase';
 import { useCart } from '@/context/CartContext';
+import { useFacebookTracking } from '@/hooks/useFacebookTracking';
 import ProductCard from '@/components/ProductCard';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
@@ -13,6 +14,7 @@ const ProductPage = () => {
   const { id } = useParams();
   const { data: dbProducts = [], isLoading } = useActiveProducts();
   const { addToCart, toggleWishlist, isInWishlist } = useCart();
+  const { fbTrackViewContent, fbTrackAddToCart } = useFacebookTracking();
   const [selectedSize, setSelectedSize] = useState<number | null>(null);
   const [selectedColor, setSelectedColor] = useState<string>('');
   const [quantity, setQuantity] = useState(1);
@@ -63,10 +65,28 @@ const ProductPage = () => {
   const related = allProducts.filter(p => p.category === product.category && p.id !== product.id).slice(0, 4);
   const wishlisted = isInWishlist(product.id);
 
+  // Track ViewContent
+  useEffect(() => {
+    if (product) {
+      fbTrackViewContent({
+        content_ids: [product.id],
+        content_name: product.name,
+        content_category: product.category,
+        value: product.price,
+      });
+    }
+  }, [product?.id]);
+
   const handleAddToCart = () => {
     if (!selectedSize) { toast.error('Please select a size'); return; }
     if (!selectedColor) { toast.error('Please select a color'); return; }
     addToCart(product, selectedSize, selectedColor);
+    fbTrackAddToCart({
+      content_ids: [product.id],
+      content_name: product.name,
+      value: product.price * quantity,
+      num_items: quantity,
+    });
     toast.success(`${product.name} added to cart!`);
   };
 

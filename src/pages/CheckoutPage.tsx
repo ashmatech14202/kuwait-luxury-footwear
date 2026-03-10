@@ -1,8 +1,9 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { ArrowLeft, CheckCircle } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
 import { useAddOrder } from '@/hooks/useDatabase';
+import { useFacebookTracking } from '@/hooks/useFacebookTracking';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { Input } from '@/components/ui/input';
@@ -13,6 +14,7 @@ const CheckoutPage = () => {
   const { items, cartTotal, clearCart } = useCart();
   const addOrder = useAddOrder();
   const navigate = useNavigate();
+  const { fbTrackInitiateCheckout, fbTrackPurchase } = useFacebookTracking();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [orderPlaced, setOrderPlaced] = useState(false);
   const [orderId, setOrderId] = useState('');
@@ -29,6 +31,17 @@ const CheckoutPage = () => {
 
   const shipping = cartTotal >= 30 ? 0 : 3;
   const total = cartTotal + shipping;
+
+  // Track InitiateCheckout on mount
+  useEffect(() => {
+    if (items.length > 0) {
+      fbTrackInitiateCheckout({
+        content_ids: items.map(i => i.product.id),
+        value: cartTotal,
+        num_items: items.reduce((s, i) => s + i.quantity, 0),
+      });
+    }
+  }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setForm(prev => ({ ...prev, [e.target.name]: e.target.value }));
@@ -69,6 +82,12 @@ const CheckoutPage = () => {
       });
 
       setOrderId(orderNumber);
+      fbTrackPurchase({
+        content_ids: items.map(i => i.product.id),
+        value: total,
+        num_items: items.reduce((s, i) => s + i.quantity, 0),
+        order_id: orderNumber,
+      });
       clearCart();
       setOrderPlaced(true);
       toast.success('Order placed successfully!');

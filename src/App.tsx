@@ -6,6 +6,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { CartProvider } from "@/context/CartContext";
 import { AdminProvider } from "@/context/AdminContext";
 import WhatsAppButton from "@/components/WhatsAppButton";
+import FacebookPixelProvider from "@/components/FacebookPixelProvider";
 import Index from "./pages/Index.tsx";
 import ShopPage from "./pages/ShopPage.tsx";
 import ProductPage from "./pages/ProductPage.tsx";
@@ -21,6 +22,7 @@ import BannersManager from "./pages/admin/BannersManager.tsx";
 import AnalyticsPage from "./pages/admin/AnalyticsPage.tsx";
 import CustomersPage from "./pages/admin/CustomersPage.tsx";
 import SettingsPage from "./pages/admin/SettingsPage.tsx";
+import MarketingTrackingPage from "./pages/admin/MarketingTrackingPage.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
 const queryClient = new QueryClient();
@@ -48,11 +50,13 @@ const App = () => (
                 <Route path="banners" element={<BannersManager />} />
                 <Route path="analytics" element={<AnalyticsPage />} />
                 <Route path="customers" element={<CustomersPage />} />
-                <Route path="settings" element={<SettingsPage />} />
+              <Route path="settings" element={<SettingsPage />} />
+              <Route path="marketing" element={<MarketingTrackingPage />} />
               </Route>
               <Route path="*" element={<NotFound />} />
             </Routes>
             <WhatsAppButton />
+            <FacebookPixelProvider />
           </BrowserRouter>
         </AdminProvider>
       </CartProvider>
