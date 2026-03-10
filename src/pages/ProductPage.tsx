@@ -17,7 +17,7 @@ const ProductPage = () => {
   const allProducts: Product[] = useMemo(() => {
     const adminAsProducts: Product[] = adminProducts
       .filter(p => p.isActive)
-      .map(p => ({ ...p, images: [p.image], rating: 4.5, reviews: 0 }));
+      .map(p => ({ ...p, category: p.category as Product['category'], images: [p.image], rating: 4.5, reviews: 0 }));
     return [...catalogProducts, ...adminAsProducts];
   }, [adminProducts]);
 
