@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { ArrowLeft, CheckCircle } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
 import { useAddOrder } from '@/hooks/useDatabase';
+import { useFacebookTracking } from '@/hooks/useFacebookTracking';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { Input } from '@/components/ui/input';
