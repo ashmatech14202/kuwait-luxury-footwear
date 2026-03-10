@@ -314,7 +314,7 @@ const Index = () => {
             <span className="text-neon font-body text-sm font-bold tracking-[0.3em] uppercase">The SRK Collection Difference</span>
             <h2 className="heading-display text-4xl md:text-6xl font-bold mt-2 text-foreground">Why Athletes Choose Us</h2>
           </motion.div>
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-6">
             {[
               { icon: Shield, title: '100% Authentic', desc: 'Every pair verified genuine. We source directly from brands.' },
               { icon: Zap, title: 'Performance Gear', desc: 'Latest tech from Nike, Adidas, Puma & top sport brands.' },
