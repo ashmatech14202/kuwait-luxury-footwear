@@ -25,6 +25,7 @@ const emptyForm = {
 
 const ProductsManager = () => {
   const { data: products = [], isLoading } = useProducts();
+  const { data: categoryList = [] } = useActiveCategories();
   const addProduct = useAddProduct();
   const updateProduct = useUpdateProduct();
   const deleteProduct = useDeleteProduct();
