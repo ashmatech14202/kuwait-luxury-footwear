@@ -1,8 +1,9 @@
 import { useParams, Link } from 'react-router-dom';
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { Star, Heart, Minus, Plus, Truck, RefreshCw, Shield, Zap } from 'lucide-react';
 import { useActiveProducts } from '@/hooks/useDatabase';
 import { useCart } from '@/context/CartContext';
+import { useFacebookTracking } from '@/hooks/useFacebookTracking';
 import ProductCard from '@/components/ProductCard';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
