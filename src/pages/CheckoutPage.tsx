@@ -6,6 +6,7 @@ import { useAddOrder } from '@/hooks/useDatabase';
 import { useCheckoutLeadAutoSave } from '@/hooks/useCheckoutLeads';
 import { useFacebookTracking } from '@/hooks/useFacebookTracking';
 import { useShippingMethods } from '@/hooks/useShippingMethods';
+import { useLanguage } from '@/context/LanguageContext';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { Input } from '@/components/ui/input';
@@ -19,22 +20,16 @@ const CheckoutPage = () => {
   const { fbTrackInitiateCheckout, fbTrackPurchase } = useFacebookTracking();
   const { save: saveCheckoutLead, markCompleted: markLeadCompleted } = useCheckoutLeadAutoSave();
   const { data: shippingMethods = [] } = useShippingMethods(true);
+  const { t } = useLanguage();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [orderPlaced, setOrderPlaced] = useState(false);
   const [orderId, setOrderId] = useState('');
   const [selectedShippingId, setSelectedShippingId] = useState('');
 
   const [form, setForm] = useState({
-    fullName: '',
-    email: '',
-    phone: '',
-    address: '',
-    area: '',
-    block: '',
-    notes: '',
+    fullName: '', email: '', phone: '', address: '', area: '', block: '', notes: '',
   });
 
-  // Auto-select first shipping method
   useEffect(() => {
     if (shippingMethods.length > 0 && !selectedShippingId) {
       setSelectedShippingId(shippingMethods[0].id);
@@ -45,7 +40,6 @@ const CheckoutPage = () => {
   const shippingCharge = selectedShipping ? Number(selectedShipping.charge) : 0;
   const total = cartTotal + shippingCharge;
 
-  // Track InitiateCheckout on mount
   useEffect(() => {
     if (items.length > 0) {
       fbTrackInitiateCheckout({
@@ -56,22 +50,15 @@ const CheckoutPage = () => {
     }
   }, []);
 
-  // Auto-save lead whenever form changes
   useEffect(() => {
     if (items.length === 0) return;
     saveCheckoutLead({
-      name: form.fullName,
-      phone: form.phone,
-      email: form.email,
+      name: form.fullName, phone: form.phone, email: form.email,
       address: `${form.address}${form.block ? `, Block ${form.block}` : ''}`,
-      area: form.area,
-      notes: form.notes,
+      area: form.area, notes: form.notes,
       cartItems: items.map(item => ({
-        productName: item.product.name,
-        size: item.size,
-        color: item.color,
-        quantity: item.quantity,
-        price: item.product.price,
+        productName: item.product.name, size: item.size, color: item.color,
+        quantity: item.quantity, price: item.product.price,
       })),
       cartTotal: total,
     });
@@ -84,60 +71,43 @@ const CheckoutPage = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!form.fullName || !form.phone || !form.address || !form.area) {
-      toast.error('Please fill in all required fields');
+      toast.error(t('checkout.fill_required'));
       return;
     }
 
     setIsSubmitting(true);
-
     const orderItems = items.map(item => ({
-      productName: item.product.name,
-      size: item.size,
-      color: item.color,
-      quantity: item.quantity,
-      price: item.product.price,
+      productName: item.product.name, size: item.size, color: item.color,
+      quantity: item.quantity, price: item.product.price,
     }));
-
     const shippingAddress = `${form.address}, Block ${form.block}, ${form.area}, Kuwait`;
     const orderNumber = `ORD${String(Date.now()).slice(-6)}`;
 
     try {
       await addOrder.mutateAsync({
-        order_number: orderNumber,
-        customer_name: form.fullName,
-        customer_email: form.email,
-        customer_phone: form.phone,
-        items: orderItems,
-        total,
-        status: 'pending',
-        payment_method: 'cod',
+        order_number: orderNumber, customer_name: form.fullName,
+        customer_email: form.email, customer_phone: form.phone,
+        items: orderItems, total, status: 'pending', payment_method: 'cod',
         shipping_address: shippingAddress,
         notes: `${form.notes}${selectedShipping ? `\nShipping: ${selectedShipping.name} (${shippingCharge === 0 ? 'Free' : shippingCharge + ' KWD'})` : ''}`,
       });
-
       await markLeadCompleted();
-
       setOrderId(orderNumber);
       fbTrackPurchase({
-        content_ids: items.map(i => i.product.id),
-        value: total,
-        num_items: items.reduce((s, i) => s + i.quantity, 0),
-        order_id: orderNumber,
+        content_ids: items.map(i => i.product.id), value: total,
+        num_items: items.reduce((s, i) => s + i.quantity, 0), order_id: orderNumber,
       });
       clearCart();
       setOrderPlaced(true);
-      toast.success('Order placed successfully!');
+      toast.success(t('checkout.order_success'));
     } catch (error) {
-      toast.error('Failed to place order. Please try again.');
+      toast.error(t('checkout.order_failed'));
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  if (items.length === 0 && !orderPlaced) {
-    navigate('/cart');
-    return null;
-  }
+  if (items.length === 0 && !orderPlaced) { navigate('/cart'); return null; }
 
   if (orderPlaced) {
     return (
@@ -147,15 +117,15 @@ const CheckoutPage = () => {
           <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: 'spring', stiffness: 200 }}>
             <CheckCircle className="w-20 h-20 mx-auto mb-6 text-green-500" />
           </motion.div>
-          <h1 className="font-heading text-3xl md:text-4xl font-bold mb-4 text-foreground">Order Confirmed! 🎉</h1>
-          <p className="font-body text-muted-foreground mb-2">Your order <span className="font-bold text-primary">{orderId}</span> has been placed</p>
-          <p className="font-body text-muted-foreground mb-8">Payment: Cash on Delivery 🇰🇼</p>
+          <h1 className="font-heading text-3xl md:text-4xl font-bold mb-4 text-foreground">{t('checkout.order_confirmed')}</h1>
+          <p className="font-body text-muted-foreground mb-2">{t('checkout.title')} <span className="font-bold text-primary">{orderId}</span> {t('checkout.order_placed')}</p>
+          <p className="font-body text-muted-foreground mb-8">{t('checkout.payment_cod')}</p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link to="/shop" className="inline-flex items-center justify-center gap-2 bg-primary text-primary-foreground px-8 py-3 font-body text-sm font-bold tracking-wider uppercase hover:bg-primary/90 transition-all rounded-md">
-              Continue Shopping
+              {t('checkout.continue_shopping')}
             </Link>
             <Link to="/" className="inline-flex items-center justify-center gap-2 border border-border text-foreground px-8 py-3 font-body text-sm font-bold tracking-wider uppercase hover:bg-muted transition-all rounded-md">
-              Go Home
+              {t('checkout.go_home')}
             </Link>
           </div>
         </div>
@@ -170,54 +140,53 @@ const CheckoutPage = () => {
       <div className="pt-20 lg:pt-24">
         <div className="container mx-auto px-4 lg:px-8 py-10">
           <Link to="/cart" className="inline-flex items-center gap-2 font-body text-sm text-muted-foreground hover:text-primary transition-colors mb-6">
-            <ArrowLeft className="w-4 h-4" /> Back to Cart
+            <ArrowLeft className="w-4 h-4" /> {t('checkout.back_to_cart')}
           </Link>
-          <h1 className="font-heading text-3xl md:text-4xl font-bold mb-10 text-foreground">Checkout</h1>
+          <h1 className="font-heading text-3xl md:text-4xl font-bold mb-10 text-foreground">{t('checkout.title')}</h1>
           <form onSubmit={handleSubmit} className="grid lg:grid-cols-3 gap-10">
             <div className="lg:col-span-2 space-y-8">
               <div className="bg-card border border-border rounded-lg p-6">
-                <h2 className="font-heading text-lg font-bold uppercase tracking-wider mb-6 text-foreground">Contact Information</h2>
+                <h2 className="font-heading text-lg font-bold uppercase tracking-wider mb-6 text-foreground">{t('checkout.contact_info')}</h2>
                 <div className="grid sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="font-body text-xs uppercase tracking-wider text-muted-foreground mb-1 block">Full Name *</label>
+                    <label className="font-body text-xs uppercase tracking-wider text-muted-foreground mb-1 block">{t('checkout.full_name')} *</label>
                     <Input name="fullName" value={form.fullName} onChange={handleChange} placeholder="Ahmed Al-Sabah" required />
                   </div>
                   <div>
-                    <label className="font-body text-xs uppercase tracking-wider text-muted-foreground mb-1 block">Phone *</label>
+                    <label className="font-body text-xs uppercase tracking-wider text-muted-foreground mb-1 block">{t('checkout.phone')} *</label>
                     <Input name="phone" value={form.phone} onChange={handleChange} placeholder="+965 9900 1122" required />
                   </div>
                   <div className="sm:col-span-2">
-                    <label className="font-body text-xs uppercase tracking-wider text-muted-foreground mb-1 block">Email</label>
+                    <label className="font-body text-xs uppercase tracking-wider text-muted-foreground mb-1 block">{t('checkout.email')}</label>
                     <Input name="email" type="email" value={form.email} onChange={handleChange} placeholder="ahmed@email.com" />
                   </div>
                 </div>
               </div>
               <div className="bg-card border border-border rounded-lg p-6">
-                <h2 className="font-heading text-lg font-bold uppercase tracking-wider mb-6 text-foreground">Shipping Address</h2>
+                <h2 className="font-heading text-lg font-bold uppercase tracking-wider mb-6 text-foreground">{t('checkout.shipping_address')}</h2>
                 <div className="grid sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="font-body text-xs uppercase tracking-wider text-muted-foreground mb-1 block">Area *</label>
+                    <label className="font-body text-xs uppercase tracking-wider text-muted-foreground mb-1 block">{t('checkout.area')} *</label>
                     <Input name="area" value={form.area} onChange={handleChange} placeholder="Salmiya" required />
                   </div>
                   <div>
-                    <label className="font-body text-xs uppercase tracking-wider text-muted-foreground mb-1 block">Block</label>
+                    <label className="font-body text-xs uppercase tracking-wider text-muted-foreground mb-1 block">{t('checkout.block')}</label>
                     <Input name="block" value={form.block} onChange={handleChange} placeholder="5" />
                   </div>
                   <div className="sm:col-span-2">
-                    <label className="font-body text-xs uppercase tracking-wider text-muted-foreground mb-1 block">Street & Building *</label>
+                    <label className="font-body text-xs uppercase tracking-wider text-muted-foreground mb-1 block">{t('checkout.street')} *</label>
                     <Input name="address" value={form.address} onChange={handleChange} placeholder="Street 10, Building 5, Apt 3" required />
                   </div>
                   <div className="sm:col-span-2">
-                    <label className="font-body text-xs uppercase tracking-wider text-muted-foreground mb-1 block">Notes</label>
-                    <textarea name="notes" value={form.notes} onChange={handleChange} placeholder="Delivery instructions..."
+                    <label className="font-body text-xs uppercase tracking-wider text-muted-foreground mb-1 block">{t('checkout.notes')}</label>
+                    <textarea name="notes" value={form.notes} onChange={handleChange} placeholder={t('checkout.delivery_instructions')}
                       className="flex w-full rounded-md border border-input bg-background px-3 py-2 text-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring min-h-[80px]" />
                   </div>
                 </div>
               </div>
 
-              {/* Shipping Method Selection */}
               <div className="bg-card border border-border rounded-lg p-6">
-                <h2 className="font-heading text-lg font-bold uppercase tracking-wider mb-6 text-foreground">Shipping Method</h2>
+                <h2 className="font-heading text-lg font-bold uppercase tracking-wider mb-6 text-foreground">{t('checkout.shipping_method')}</h2>
                 <div className="space-y-3">
                   {shippingMethods.map(method => (
                     <label key={method.id}
@@ -235,7 +204,7 @@ const CheckoutPage = () => {
                         <div className="flex items-center justify-between">
                           <p className="font-body text-sm font-bold text-foreground">{method.name}</p>
                           <span className="font-body text-sm font-bold text-primary">
-                            {Number(method.charge) === 0 ? 'Free' : `${Number(method.charge).toFixed(3)} KWD`}
+                            {Number(method.charge) === 0 ? t('cart.free') : `${Number(method.charge).toFixed(3)} KWD`}
                           </span>
                         </div>
                         <div className="flex items-center gap-2 mt-0.5">
@@ -252,27 +221,27 @@ const CheckoutPage = () => {
                     </label>
                   ))}
                   {shippingMethods.length === 0 && (
-                    <p className="font-body text-sm text-muted-foreground">No shipping methods available</p>
+                    <p className="font-body text-sm text-muted-foreground">{t('checkout.no_shipping')}</p>
                   )}
                 </div>
               </div>
 
               <div className="bg-card border border-border rounded-lg p-6">
-                <h2 className="font-heading text-lg font-bold uppercase tracking-wider mb-4 text-foreground">Payment Method</h2>
+                <h2 className="font-heading text-lg font-bold uppercase tracking-wider mb-4 text-foreground">{t('checkout.payment_method')}</h2>
                 <div className="flex items-center gap-3 p-4 border-2 border-primary rounded-lg bg-primary/5">
                   <div className="w-4 h-4 rounded-full border-2 border-primary flex items-center justify-center">
                     <div className="w-2 h-2 rounded-full bg-primary" />
                   </div>
                   <div>
-                    <p className="font-body text-sm font-bold text-foreground">Cash on Delivery (COD)</p>
-                    <p className="font-body text-xs text-muted-foreground">Pay when you receive your order 🇰🇼</p>
+                    <p className="font-body text-sm font-bold text-foreground">{t('checkout.cod')}</p>
+                    <p className="font-body text-xs text-muted-foreground">{t('checkout.cod_desc')}</p>
                   </div>
                 </div>
               </div>
             </div>
             <div className="h-fit">
               <div className="bg-card border border-border rounded-lg p-6 sticky top-28">
-                <h2 className="font-heading text-lg font-bold uppercase tracking-wider mb-6 text-foreground">Order Summary</h2>
+                <h2 className="font-heading text-lg font-bold uppercase tracking-wider mb-6 text-foreground">{t('cart.order_summary')}</h2>
                 <div className="space-y-4 mb-6">
                   {items.map(item => (
                     <div key={item.product.id} className="flex gap-3">
@@ -281,25 +250,25 @@ const CheckoutPage = () => {
                       </div>
                       <div className="flex-1 min-w-0">
                         <p className="font-body text-xs font-bold truncate text-foreground">{item.product.name}</p>
-                        <p className="font-body text-xs text-muted-foreground">Size {item.size} · {item.color} · x{item.quantity}</p>
+                        <p className="font-body text-xs text-muted-foreground">{t('size')} {item.size} · {item.color} · x{item.quantity}</p>
                         <p className="font-body text-xs font-bold text-primary">{(item.product.price * item.quantity).toFixed(2)} KWD</p>
                       </div>
                     </div>
                   ))}
                 </div>
                 <div className="space-y-2 font-body text-sm border-t border-border pt-4 mb-4">
-                  <div className="flex justify-between"><span className="text-muted-foreground">Subtotal</span><span>{cartTotal.toFixed(2)} KWD</span></div>
+                  <div className="flex justify-between"><span className="text-muted-foreground">{t('cart.subtotal')}</span><span>{cartTotal.toFixed(2)} KWD</span></div>
                   <div className="flex justify-between">
-                    <span className="text-muted-foreground">Shipping{selectedShipping ? ` (${selectedShipping.name})` : ''}</span>
-                    <span>{shippingCharge === 0 ? 'Free' : `${shippingCharge.toFixed(3)} KWD`}</span>
+                    <span className="text-muted-foreground">{t('cart.shipping')}{selectedShipping ? ` (${selectedShipping.name})` : ''}</span>
+                    <span>{shippingCharge === 0 ? t('cart.free') : `${shippingCharge.toFixed(3)} KWD`}</span>
                   </div>
                 </div>
                 <div className="flex justify-between font-heading text-xl font-bold border-t border-border pt-4 mb-6 text-foreground">
-                  <span>Total</span><span className="text-primary">{total.toFixed(3)} KWD</span>
+                  <span>{t('cart.total')}</span><span className="text-primary">{total.toFixed(3)} KWD</span>
                 </div>
                 <button type="submit" disabled={isSubmitting}
                   className="w-full bg-primary text-primary-foreground py-4 font-body text-sm font-bold tracking-wider uppercase hover:bg-primary/90 transition-all duration-300 rounded-md disabled:opacity-50">
-                  {isSubmitting ? 'Placing Order...' : 'Place Order'}
+                  {isSubmitting ? t('checkout.placing') : t('checkout.place_order')}
                 </button>
               </div>
             </div>

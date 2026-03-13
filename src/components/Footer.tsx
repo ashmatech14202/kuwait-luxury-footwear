@@ -2,10 +2,12 @@ import { Link } from 'react-router-dom';
 import { Instagram, Facebook, Twitter, Youtube } from 'lucide-react';
 import { useSettings } from '@/hooks/useDatabase';
 import { useActiveCategories } from '@/hooks/useCategories';
+import { useLanguage } from '@/context/LanguageContext';
 
 const Footer = () => {
   const { data: settings } = useSettings();
   const { data: categories = [] } = useActiveCategories();
+  const { t } = useLanguage();
   const s = settings as any;
 
   return (
@@ -32,31 +34,31 @@ const Footer = () => {
           </div>
 
           <div>
-            <h4 className="font-heading text-lg font-semibold uppercase tracking-wider mb-4">Shop</h4>
+            <h4 className="font-heading text-lg font-semibold uppercase tracking-wider mb-4">{t('footer.shop')}</h4>
             <ul className="space-y-3 font-body text-sm text-primary-foreground/60">
               {categories.slice(0, 5).map(cat => (
                 <li key={cat.id}><Link to={`/shop?category=${cat.slug}`} className="hover:text-neon transition-colors">{cat.name}</Link></li>
               ))}
-              {categories.length === 0 && <li><Link to="/shop" className="hover:text-neon transition-colors">All Products</Link></li>}
+              {categories.length === 0 && <li><Link to="/shop" className="hover:text-neon transition-colors">{t('footer.all_products')}</Link></li>}
             </ul>
           </div>
 
           <div>
-            <h4 className="font-heading text-lg font-semibold uppercase tracking-wider mb-4">Company</h4>
+            <h4 className="font-heading text-lg font-semibold uppercase tracking-wider mb-4">{t('footer.company')}</h4>
             <ul className="space-y-3 font-body text-sm text-primary-foreground/60">
-              <li><Link to="/about" className="hover:text-neon transition-colors">About Us</Link></li>
-              <li><Link to="/contact" className="hover:text-neon transition-colors">Contact Us</Link></li>
-              <li><Link to="/shop" className="hover:text-neon transition-colors">Shop</Link></li>
+              <li><Link to="/about" className="hover:text-neon transition-colors">{t('footer.about')}</Link></li>
+              <li><Link to="/contact" className="hover:text-neon transition-colors">{t('footer.contact')}</Link></li>
+              <li><Link to="/shop" className="hover:text-neon transition-colors">{t('nav.shop')}</Link></li>
             </ul>
           </div>
 
           <div>
-            <h4 className="font-heading text-lg font-semibold uppercase tracking-wider mb-4">Contact</h4>
+            <h4 className="font-heading text-lg font-semibold uppercase tracking-wider mb-4">{t('footer.contact_title')}</h4>
             <div className="font-body text-sm text-primary-foreground/40 space-y-2">
               {s?.contact_address && <p>{s.contact_address}</p>}
               {s?.contact_email && <p>{s.contact_email}</p>}
               {s?.contact_phone && <p>{s.contact_phone}</p>}
-              {s?.whatsapp_number && <p>WhatsApp: {s.whatsapp_number}</p>}
+              {s?.whatsapp_number && <p>{t('footer.whatsapp')}: {s.whatsapp_number}</p>}
             </div>
           </div>
         </div>

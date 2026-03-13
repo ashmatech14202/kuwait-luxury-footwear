@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import { Heart } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
 import { Product } from '@/data/products';
+import { useLanguage } from '@/context/LanguageContext';
 import { motion } from 'framer-motion';
 
 interface ProductCardProps {
@@ -10,6 +11,7 @@ interface ProductCardProps {
 
 const ProductCard = ({ product }: ProductCardProps) => {
   const { toggleWishlist, isInWishlist } = useCart();
+  const { t } = useLanguage();
   const wishlisted = isInWishlist(product.id);
 
   return (
@@ -22,23 +24,18 @@ const ProductCard = ({ product }: ProductCardProps) => {
     >
       <Link to={`/product/${product.id}`} className="block">
         <div className="relative aspect-square overflow-hidden bg-card rounded-lg mb-4 border border-border">
-          <img
-            src={product.image}
-            alt={product.name}
-            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-            loading="lazy"
-          />
+          <img src={product.image} alt={product.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" loading="lazy" />
           <div className="absolute inset-0 bg-neon/0 group-hover:bg-neon/5 transition-colors duration-300" />
           {product.isNew && (
             <span className="absolute top-3 left-3 bg-neon text-accent-foreground px-3 py-1 text-xs font-body font-bold tracking-wider uppercase rounded-sm">
-              New
+              {t('card.new')}
             </span>
           )}
           {product.originalPrice && (
             <span className="absolute top-3 left-3 bg-hot text-accent-foreground px-3 py-1 text-xs font-body font-bold tracking-wider uppercase rounded-sm"
               style={product.isNew ? { left: '4.5rem' } : {}}
             >
-              Sale
+              {t('card.sale')}
             </span>
           )}
           <button
