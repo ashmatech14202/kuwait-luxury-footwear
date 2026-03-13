@@ -2,9 +2,10 @@ import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useState, useMemo, useEffect } from 'react';
 import { Star, Heart, Minus, Plus, Truck, RefreshCw, Shield, Zap } from 'lucide-react';
 import { useActiveProducts } from '@/hooks/useDatabase';
-import { useProductVariations, type ProductVariation } from '@/hooks/useProductVariations';
+import { useProductVariations } from '@/hooks/useProductVariations';
 import { useCart } from '@/context/CartContext';
 import { useFacebookTracking } from '@/hooks/useFacebookTracking';
+import { useLanguage } from '@/context/LanguageContext';
 import ProductCard from '@/components/ProductCard';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
@@ -18,6 +19,7 @@ const ProductPage = () => {
   const { data: variations = [] } = useProductVariations(id || '');
   const { addToCart, toggleWishlist, isInWishlist } = useCart();
   const { fbTrackViewContent, fbTrackAddToCart } = useFacebookTracking();
+  const { t } = useLanguage();
   const navigate = useNavigate();
   const [selectedSize, setSelectedSize] = useState<number | null>(null);
   const [selectedColor, setSelectedColor] = useState<string>('');
@@ -35,13 +37,11 @@ const ProductPage = () => {
 
   const product = allProducts.find(p => p.id === id);
 
-  // Find matching variation for selected size/color
   const selectedVariation = useMemo(() => {
     if (!selectedSize || !selectedColor || variations.length === 0) return null;
     return variations.find(v => v.size === String(selectedSize) && v.color === selectedColor) || null;
   }, [selectedSize, selectedColor, variations]);
 
-  // Display price based on variation
   const displayPrice = selectedVariation?.price ? Number(selectedVariation.price) : product?.price || 0;
   const variationStock = selectedVariation ? selectedVariation.stock : null;
 
@@ -58,7 +58,7 @@ const ProductPage = () => {
     return (
       <div className="min-h-screen bg-background">
         <Navbar />
-        <div className="pt-32 text-center"><p className="font-body text-muted-foreground">Loading...</p></div>
+        <div className="pt-32 text-center"><p className="font-body text-muted-foreground">{t('loading')}</p></div>
       </div>
     );
   }
@@ -68,8 +68,8 @@ const ProductPage = () => {
       <div className="min-h-screen bg-background">
         <Navbar />
         <div className="pt-32 text-center">
-          <h1 className="heading-display text-3xl font-bold mb-4 text-foreground">Product Not Found</h1>
-          <Link to="/shop" className="text-neon font-body text-sm underline">Back to Shop</Link>
+          <h1 className="heading-display text-3xl font-bold mb-4 text-foreground">{t('product.not_found')}</h1>
+          <Link to="/shop" className="text-neon font-body text-sm underline">{t('product.back_to_shop')}</Link>
         </div>
       </div>
     );
@@ -80,9 +80,9 @@ const ProductPage = () => {
   const wishlisted = isInWishlist(product.id);
 
   const validateSelection = () => {
-    if (!selectedSize) { toast.error('Please select a size'); return false; }
-    if (!selectedColor) { toast.error('Please select a color'); return false; }
-    if (variationStock !== null && variationStock <= 0) { toast.error('This variation is out of stock'); return false; }
+    if (!selectedSize) { toast.error(t('product.select_size_error')); return false; }
+    if (!selectedColor) { toast.error(t('product.select_color_error')); return false; }
+    if (variationStock !== null && variationStock <= 0) { toast.error(t('product.out_of_stock_error')); return false; }
     return true;
   };
 
@@ -94,7 +94,7 @@ const ProductPage = () => {
       content_ids: [product.id], content_name: product.name,
       value: displayPrice * quantity, num_items: quantity,
     });
-    toast.success(`${product.name} added to cart!`);
+    toast.success(`${product.name} ${t('product.added_to_cart')}`);
   };
 
   const handleBuyNow = () => {
@@ -110,13 +110,12 @@ const ProductPage = () => {
       <div className="pt-20 lg:pt-24">
         <div className="container mx-auto px-4 lg:px-8 py-8">
           <div className="flex items-center gap-2 font-body text-sm text-muted-foreground mb-8">
-            <Link to="/" className="hover:text-foreground transition-colors">Home</Link><span>/</span>
-            <Link to="/shop" className="hover:text-foreground transition-colors">Shop</Link><span>/</span>
+            <Link to="/" className="hover:text-foreground transition-colors">{t('nav.home')}</Link><span>/</span>
+            <Link to="/shop" className="hover:text-foreground transition-colors">{t('nav.shop')}</Link><span>/</span>
             <span className="text-foreground">{product.name}</span>
           </div>
 
           <div className="grid lg:grid-cols-2 gap-12 lg:gap-16">
-            {/* Image Gallery */}
             <div>
               <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}
                 className="aspect-square bg-card overflow-hidden rounded-lg border border-border mb-4">
@@ -144,7 +143,7 @@ const ProductPage = () => {
                     <Star key={i} className={`w-4 h-4 ${i < Math.floor(product.rating) ? 'fill-neon text-neon' : 'text-border'}`} />
                   ))}
                 </div>
-                <span className="font-body text-sm text-muted-foreground">({product.reviews.toLocaleString()} reviews)</span>
+                <span className="font-body text-sm text-muted-foreground">({product.reviews.toLocaleString()} {t('product.reviews')})</span>
               </div>
 
               <div className="flex items-center gap-3 mb-8">
@@ -161,14 +160,14 @@ const ProductPage = () => {
 
               {variationStock !== null && (
                 <p className={`font-body text-sm mb-4 ${variationStock > 0 ? 'text-green-600' : 'text-destructive'}`}>
-                  {variationStock > 0 ? `${variationStock} in stock` : 'Out of stock'}
+                  {variationStock > 0 ? `${variationStock} ${t('product.in_stock')}` : t('product.out_of_stock')}
                 </p>
               )}
 
               <p className="font-body text-muted-foreground leading-relaxed mb-8">{product.description}</p>
 
               <div className="mb-6">
-                <h3 className="font-heading font-bold uppercase tracking-wider text-sm mb-3 text-foreground">Select Size</h3>
+                <h3 className="font-heading font-bold uppercase tracking-wider text-sm mb-3 text-foreground">{t('product.select_size')}</h3>
                 <div className="flex flex-wrap gap-2">
                   {product.sizes.map(size => (
                     <button key={size} onClick={() => setSelectedSize(size)}
@@ -180,7 +179,7 @@ const ProductPage = () => {
               </div>
 
               <div className="mb-8">
-                <h3 className="font-heading font-bold uppercase tracking-wider text-sm mb-3 text-foreground">Color</h3>
+                <h3 className="font-heading font-bold uppercase tracking-wider text-sm mb-3 text-foreground">{t('product.color')}</h3>
                 <div className="flex flex-wrap gap-2">
                   {product.colors.map(color => (
                     <button key={color} onClick={() => setSelectedColor(color)}
@@ -200,7 +199,7 @@ const ProductPage = () => {
                 <button onClick={handleAddToCart}
                   disabled={variationStock !== null && variationStock <= 0}
                   className="flex-1 h-12 bg-neon text-accent-foreground font-body text-sm font-bold tracking-wider uppercase hover:bg-neon-glow transition-all duration-300 glow-neon rounded-sm disabled:opacity-50 disabled:cursor-not-allowed">
-                  {variationStock !== null && variationStock <= 0 ? 'Out of Stock' : 'Add to Cart'}
+                  {variationStock !== null && variationStock <= 0 ? t('product.out_of_stock') : t('product.add_to_cart')}
                 </button>
                 <button onClick={() => toggleWishlist(product.id)}
                   className={`w-12 h-12 border flex items-center justify-center rounded-sm transition-all ${wishlisted ? 'border-neon bg-neon/10' : 'border-border hover:border-neon/50'}`}>
@@ -211,15 +210,15 @@ const ProductPage = () => {
               <button onClick={handleBuyNow}
                 disabled={variationStock !== null && variationStock <= 0}
                 className="w-full h-12 bg-foreground text-background font-body text-sm font-bold tracking-wider uppercase hover:bg-foreground/90 transition-all duration-300 rounded-sm disabled:opacity-50 disabled:cursor-not-allowed mb-8">
-                Buy Now
+                {t('product.buy_now')}
               </button>
 
               <div className="space-y-3 border-t border-border pt-6">
                 {[
-                  { icon: Shield, text: '100% Authentic - Verified by SRK Collection' },
-                  { icon: Truck, text: 'Free delivery across Kuwait on orders over 30 KWD' },
-                  { icon: RefreshCw, text: '30-day easy return policy' },
-                  { icon: Zap, text: 'Cash on Delivery available' },
+                  { icon: Shield, text: t('product.authentic') },
+                  { icon: Truck, text: t('product.free_delivery') },
+                  { icon: RefreshCw, text: t('product.return_policy') },
+                  { icon: Zap, text: t('product.cod') },
                 ].map((item, i) => (
                   <div key={i} className="flex items-center gap-3 font-body text-sm text-muted-foreground">
                     <item.icon className="w-4 h-4 text-neon shrink-0" />{item.text}
@@ -229,12 +228,11 @@ const ProductPage = () => {
             </motion.div>
           </div>
 
-          {/* Reviews */}
           <ProductReviews productId={product.id} />
 
           {related.length > 0 && (
             <section className="mt-20 pt-10 border-t border-border">
-              <h2 className="heading-display text-2xl md:text-4xl font-bold mb-10 text-foreground">You May Also Like</h2>
+              <h2 className="heading-display text-2xl md:text-4xl font-bold mb-10 text-foreground">{t('product.related')}</h2>
               <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
                 {related.map(p => <ProductCard key={p.id} product={p} />)}
               </div>

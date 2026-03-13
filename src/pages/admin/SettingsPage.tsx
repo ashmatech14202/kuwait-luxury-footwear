@@ -9,6 +9,7 @@ const SettingsPage = () => {
   const [form, setForm] = useState({
     site_name: '', site_description: '', meta_title: '', meta_description: '',
     whatsapp_number: '', instagram_handle: '', free_shipping_threshold: 30, currency: 'KWD',
+    language: 'en',
     logo_url: '', favicon_url: '', footer_description: '', footer_copyright: '', footer_tagline: '',
     contact_email: '', contact_phone: '', contact_address: '',
     facebook_url: '', twitter_url: '', youtube_url: '', instagram_url: '',
@@ -21,6 +22,7 @@ const SettingsPage = () => {
         meta_title: s.meta_title || '', meta_description: s.meta_description || '',
         whatsapp_number: s.whatsapp_number || '', instagram_handle: s.instagram_handle || '',
         free_shipping_threshold: Number(s.free_shipping_threshold) || 30, currency: s.currency || 'KWD',
+        language: s.language || 'en',
         logo_url: s.logo_url || '/logo.png', favicon_url: s.favicon_url || '/favicon.ico',
         footer_description: s.footer_description || '', footer_copyright: s.footer_copyright || '', footer_tagline: s.footer_tagline || '',
         contact_email: s.contact_email || '', contact_phone: s.contact_phone || '', contact_address: s.contact_address || '',
@@ -87,6 +89,15 @@ const SettingsPage = () => {
           <div className="grid grid-cols-2 gap-4">
             <Field label="Currency" field="currency" />
             <Field label="Free Shipping Min" field="free_shipping_threshold" type="number" />
+          </div>
+          <div>
+            <label className="block font-body text-xs uppercase tracking-wider text-muted-foreground mb-1">Website Language</label>
+            <select value={form.language} onChange={e => setForm({ ...form, language: e.target.value })}
+              className="w-full px-4 py-2.5 border border-border bg-background rounded-md font-body text-sm text-foreground focus:outline-none focus:border-primary">
+              <option value="en">English</option>
+              <option value="ar">العربية (Arabic)</option>
+            </select>
+            <p className="font-body text-xs text-muted-foreground mt-1">This changes the entire frontend language and direction (RTL for Arabic)</p>
           </div>
         </Section>
 

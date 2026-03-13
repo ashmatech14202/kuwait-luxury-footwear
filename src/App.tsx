@@ -5,6 +5,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { CartProvider } from "@/context/CartContext";
 import { AdminAuthProvider } from "@/hooks/useAdminAuth";
+import { LanguageProvider } from "@/context/LanguageContext";
 import WhatsAppButton from "@/components/WhatsAppButton";
 import FacebookPixelProvider from "@/components/FacebookPixelProvider";
 import ProtectedAdminRoute from "@/components/ProtectedAdminRoute";
@@ -44,6 +45,7 @@ const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
       <CartProvider>
+        <LanguageProvider>
         <AdminAuthProvider>
           <Toaster />
           <Sonner />
@@ -88,6 +90,7 @@ const App = () => (
             <FacebookPixelProvider />
           </BrowserRouter>
         </AdminAuthProvider>
+        </LanguageProvider>
       </CartProvider>
     </TooltipProvider>
   </QueryClientProvider>

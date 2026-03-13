@@ -4,6 +4,7 @@ import { Search, SlidersHorizontal } from 'lucide-react';
 import { brands } from '@/data/products';
 import { useActiveProducts } from '@/hooks/useDatabase';
 import { useActiveCategories } from '@/hooks/useCategories';
+import { useLanguage } from '@/context/LanguageContext';
 import ProductCard from '@/components/ProductCard';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
@@ -13,6 +14,7 @@ const ShopPage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const { data: dbProducts = [], isLoading } = useActiveProducts();
   const { data: dbCategories = [] } = useActiveCategories();
+  const { t } = useLanguage();
   const categoryFilter = searchParams.get('category') || '';
   const [search, setSearch] = useState('');
   const [brandFilter, setBrandFilter] = useState('');
@@ -54,9 +56,9 @@ const ShopPage = () => {
         <div className="bg-card border-b border-border py-12">
           <div className="container mx-auto px-4 lg:px-8">
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-              <span className="text-neon font-body text-sm font-bold tracking-[0.3em] uppercase">Collection</span>
+              <span className="text-neon font-body text-sm font-bold tracking-[0.3em] uppercase">{t('shop.collection')}</span>
               <h1 className="heading-display text-4xl md:text-6xl font-bold mt-2 text-foreground">
-                {activeCategoryName || (categoryFilter ? categoryFilter.charAt(0).toUpperCase() + categoryFilter.slice(1) : 'All Products')}
+                {activeCategoryName || (categoryFilter ? categoryFilter.charAt(0).toUpperCase() + categoryFilter.slice(1) : t('shop.all_products'))}
               </h1>
             </motion.div>
           </div>
@@ -66,12 +68,12 @@ const ShopPage = () => {
           <div className="flex flex-col md:flex-row gap-4 mb-8">
             <div className="relative flex-1">
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-              <input type="text" placeholder="Search shoes, brands..." value={search} onChange={(e) => setSearch(e.target.value)}
+              <input type="text" placeholder={t('shop.search')} value={search} onChange={(e) => setSearch(e.target.value)}
                 className="w-full pl-11 pr-4 py-3 border border-border bg-background font-body text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-neon transition-colors rounded-sm" />
             </div>
             <button onClick={() => setShowFilters(!showFilters)}
               className="flex items-center gap-2 px-6 py-3 border border-border bg-background font-body text-sm text-foreground hover:border-neon transition-colors md:hidden rounded-sm">
-              <SlidersHorizontal className="w-4 h-4" /> Filters
+              <SlidersHorizontal className="w-4 h-4" /> {t('shop.filters')}
             </button>
           </div>
 
@@ -79,11 +81,11 @@ const ShopPage = () => {
             <aside className={`${showFilters ? 'block' : 'hidden'} md:block w-full md:w-56 shrink-0`}>
               <div className="sticky top-28 space-y-8">
                 <div>
-                  <h3 className="font-heading font-bold uppercase tracking-wider text-sm mb-4 text-foreground">Categories</h3>
+                  <h3 className="font-heading font-bold uppercase tracking-wider text-sm mb-4 text-foreground">{t('shop.categories')}</h3>
                   <div className="space-y-2">
                     <button onClick={() => setCategory('')}
                       className={`block w-full text-left font-body text-sm py-1.5 transition-colors ${!categoryFilter ? 'text-neon font-semibold' : 'text-muted-foreground hover:text-foreground'}`}>
-                      All Products
+                      {t('shop.all_products')}
                     </button>
                     {dbCategories.map(cat => (
                       <button key={cat.id} onClick={() => setCategory(cat.slug)}
@@ -95,11 +97,11 @@ const ShopPage = () => {
                   </div>
                 </div>
                 <div>
-                  <h3 className="font-heading font-bold uppercase tracking-wider text-sm mb-4 text-foreground">Brands</h3>
+                  <h3 className="font-heading font-bold uppercase tracking-wider text-sm mb-4 text-foreground">{t('shop.brands')}</h3>
                   <div className="space-y-2">
                     <button onClick={() => setBrandFilter('')}
                       className={`block w-full text-left font-body text-sm py-1.5 transition-colors ${!brandFilter ? 'text-neon font-semibold' : 'text-muted-foreground hover:text-foreground'}`}>
-                      All Brands
+                      {t('shop.all_brands')}
                     </button>
                     {brands.map(brand => (
                       <button key={brand} onClick={() => setBrandFilter(brand)}
@@ -110,7 +112,7 @@ const ShopPage = () => {
                   </div>
                 </div>
                 <div>
-                  <h3 className="font-heading font-bold uppercase tracking-wider text-sm mb-4 text-foreground">Price (KWD)</h3>
+                  <h3 className="font-heading font-bold uppercase tracking-wider text-sm mb-4 text-foreground">{t('shop.price')}</h3>
                   <div className="flex gap-3 items-center font-body text-sm">
                     <input type="number" value={priceRange[0]} onChange={(e) => setPriceRange([+e.target.value, priceRange[1]])}
                       className="w-20 px-3 py-2 border border-border bg-background text-sm text-foreground focus:outline-none focus:border-neon rounded-sm" placeholder="Min" />
@@ -123,10 +125,10 @@ const ShopPage = () => {
             </aside>
 
             <div className="flex-1">
-              <p className="font-body text-sm text-muted-foreground mb-6">{filtered.length} products found</p>
+              <p className="font-body text-sm text-muted-foreground mb-6">{filtered.length} {t('shop.products_found')}</p>
               {isLoading ? (
                 <div className="text-center py-20">
-                  <p className="font-body text-muted-foreground">Loading products...</p>
+                  <p className="font-body text-muted-foreground">{t('shop.loading')}</p>
                 </div>
               ) : filtered.length > 0 ? (
                 <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
@@ -134,8 +136,8 @@ const ShopPage = () => {
                 </div>
               ) : (
                 <div className="text-center py-20">
-                  <p className="font-heading text-2xl uppercase font-bold mb-2 text-foreground">No Results</p>
-                  <p className="font-body text-sm text-muted-foreground">Try adjusting your filters</p>
+                  <p className="font-heading text-2xl uppercase font-bold mb-2 text-foreground">{t('shop.no_results')}</p>
+                  <p className="font-body text-sm text-muted-foreground">{t('shop.adjust_filters')}</p>
                 </div>
               )}
             </div>
