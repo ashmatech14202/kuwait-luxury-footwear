@@ -37,7 +37,7 @@ const Navbar = () => {
             <Link to="/cart" className="hover-neon transition-colors duration-300 relative">
               <ShoppingBag className="w-5 h-5" />
               {cartCount > 0 && (
-                <span className="absolute -top-2 -right-2 w-5 h-5 bg-neon text-accent-foreground rounded-full text-xs flex items-center justify-center font-body font-bold">
+                <span className="absolute -top-2 -end-2 w-5 h-5 bg-neon text-accent-foreground rounded-full text-xs flex items-center justify-center font-body font-bold">
                   {cartCount}
                 </span>
               )}

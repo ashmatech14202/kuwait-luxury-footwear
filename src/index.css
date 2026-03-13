@@ -71,6 +71,23 @@
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-heading);
   }
+
+  /* RTL Support */
+  [dir="rtl"] {
+    font-family: 'Inter', 'Segoe UI', Tahoma, sans-serif;
+  }
+  [dir="rtl"] .tracking-widest,
+  [dir="rtl"] .tracking-wider,
+  [dir="rtl"] .tracking-wide {
+    letter-spacing: 0.02em;
+  }
+  [dir="rtl"] .tracking-\[0\.3em\] {
+    letter-spacing: 0.05em;
+  }
+  /* Fix RTL flex/positioning */
+  [dir="rtl"] .animate-marquee {
+    direction: ltr;
+  }
 }
 
 @layer components {

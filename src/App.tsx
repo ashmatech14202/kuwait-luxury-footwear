@@ -45,11 +45,11 @@ const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
       <CartProvider>
-        <LanguageProvider>
         <AdminAuthProvider>
           <Toaster />
           <Sonner />
           <BrowserRouter>
+            <LanguageProvider>
             <ScrollToTop />
             <Routes>
               <Route path="/" element={<Index />} />
@@ -88,9 +88,9 @@ const App = () => (
             <VisitorTracker />
             <WhatsAppButton />
             <FacebookPixelProvider />
+            </LanguageProvider>
           </BrowserRouter>
         </AdminAuthProvider>
-        </LanguageProvider>
       </CartProvider>
     </TooltipProvider>
   </QueryClientProvider>
