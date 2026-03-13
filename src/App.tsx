@@ -88,9 +88,9 @@ const App = () => (
             <VisitorTracker />
             <WhatsAppButton />
             <FacebookPixelProvider />
+            </LanguageProvider>
           </BrowserRouter>
         </AdminAuthProvider>
-        </LanguageProvider>
       </CartProvider>
     </TooltipProvider>
   </QueryClientProvider>
