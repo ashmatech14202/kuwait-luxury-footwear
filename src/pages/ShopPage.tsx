@@ -67,9 +67,9 @@ const ShopPage = () => {
         <div className="container mx-auto px-4 lg:px-8 py-10">
           <div className="flex flex-col md:flex-row gap-4 mb-8">
             <div className="relative flex-1">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+              <Search className="absolute start-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
               <input type="text" placeholder={t('shop.search')} value={search} onChange={(e) => setSearch(e.target.value)}
-                className="w-full pl-11 pr-4 py-3 border border-border bg-background font-body text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-neon transition-colors rounded-sm" />
+                className="w-full ps-11 pe-4 py-3 border border-border bg-background font-body text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-neon transition-colors rounded-sm" />
             </div>
             <button onClick={() => setShowFilters(!showFilters)}
               className="flex items-center gap-2 px-6 py-3 border border-border bg-background font-body text-sm text-foreground hover:border-neon transition-colors md:hidden rounded-sm">

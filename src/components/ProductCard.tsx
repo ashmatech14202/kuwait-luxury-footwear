@@ -40,11 +40,11 @@ const ProductCard = ({ product }: ProductCardProps) => {
           )}
           <button
             onClick={(e) => { e.preventDefault(); toggleWishlist(product.id); }}
-            className="absolute top-3 right-3 w-9 h-9 flex items-center justify-center bg-background/80 backdrop-blur-sm rounded-full transition-all hover:bg-background hover:scale-110 border border-border"
+            className="absolute top-3 end-3 w-9 h-9 flex items-center justify-center bg-background/80 backdrop-blur-sm rounded-full transition-all hover:bg-background hover:scale-110 border border-border"
           >
             <Heart className={`w-4 h-4 ${wishlisted ? 'fill-neon text-neon' : 'text-foreground'}`} />
           </button>
-          <span className="absolute bottom-3 left-3 bg-background/90 backdrop-blur-sm px-2 py-1 text-xs font-body font-semibold tracking-wider uppercase rounded-sm text-foreground border border-border">
+          <span className="absolute bottom-3 start-3 bg-background/90 backdrop-blur-sm px-2 py-1 text-xs font-body font-semibold tracking-wider uppercase rounded-sm text-foreground border border-border">
             {product.brand}
           </span>
         </div>
