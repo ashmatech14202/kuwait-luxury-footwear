@@ -3,6 +3,7 @@ import { ShoppingBag, Heart, Search, Menu, X } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
 import { useActiveCategories } from '@/hooks/useCategories';
 import { useLanguage } from '@/context/LanguageContext';
+import LanguageSwitcher from '@/components/LanguageSwitcher';
 import { useState } from 'react';
 
 const Navbar = () => {
