@@ -110,16 +110,16 @@ export const useFacebookTracking = () => {
   const fbTrackLead = useCallback((params?: { value?: number }) => {
     if (!settings?.facebook_pixel_enabled || !settings?.tracking_lead) return;
     const currency = settings.currency || 'KWD';
-    const eventId = trackLead({ ...params, currency });
-    sendServerEvent('Lead', eventId, { ...params, currency });
-  }, [settings, sendServerEvent]);
+    const data = { ...params, currency };
+    fireEvent('Lead', (d) => trackLead(d as any), data);
+  }, [settings, fireEvent]);
 
   const fbTrackCompleteRegistration = useCallback((params?: { value?: number; status?: string }) => {
     if (!settings?.facebook_pixel_enabled || !settings?.tracking_complete_registration) return;
     const currency = settings.currency || 'KWD';
-    const eventId = trackCompleteRegistration({ ...params, currency });
-    sendServerEvent('CompleteRegistration', eventId, { ...params, currency });
-  }, [settings, sendServerEvent]);
+    const data = { ...params, currency };
+    fireEvent('CompleteRegistration', (d) => trackCompleteRegistration(d as any), data);
+  }, [settings, fireEvent]);
 
   return {
     fbTrackViewContent,
