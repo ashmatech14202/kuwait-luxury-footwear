@@ -40,6 +40,22 @@ export const useFacebookTracking = () => {
     }
   }, [settings?.facebook_capi_enabled]);
 
+  const fireEvent = useCallback((
+    eventName: string,
+    browserTrackFn: (data: Record<string, any>) => string,
+    data: Record<string, any>,
+  ) => {
+    const capiEnabled = settings?.facebook_capi_enabled;
+    if (capiEnabled) {
+      // Server-only: generate ID and send via CAPI (avoids duplicate with browser pixel)
+      const eventId = `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+      sendServerEvent(eventName, eventId, data);
+    } else {
+      // Browser-only: fire pixel
+      browserTrackFn(data);
+    }
+  }, [settings?.facebook_capi_enabled, sendServerEvent]);
+
   const fbTrackViewContent = useCallback((params: {
     content_ids: string[];
     content_name: string;
@@ -49,9 +65,9 @@ export const useFacebookTracking = () => {
     if (!settings?.facebook_pixel_enabled || !settings?.tracking_viewcontent) return;
     const currency = settings.currency || 'KWD';
     const contentType = settings.default_content_type || 'product';
-    const eventId = trackViewContent({ ...params, currency, content_type: contentType });
-    sendServerEvent('ViewContent', eventId, { ...params, currency, content_type: contentType });
-  }, [settings, sendServerEvent]);
+    const data = { ...params, currency, content_type: contentType };
+    fireEvent('ViewContent', (d) => trackViewContent(d as any), data);
+  }, [settings, fireEvent]);
 
   const fbTrackAddToCart = useCallback((params: {
     content_ids: string[];
@@ -62,9 +78,9 @@ export const useFacebookTracking = () => {
     if (!settings?.facebook_pixel_enabled || !settings?.tracking_addtocart) return;
     const currency = settings.currency || 'KWD';
     const contentType = settings.default_content_type || 'product';
-    const eventId = trackAddToCart({ ...params, currency, content_type: contentType });
-    sendServerEvent('AddToCart', eventId, { ...params, currency, content_type: contentType });
-  }, [settings, sendServerEvent]);
+    const data = { ...params, currency, content_type: contentType };
+    fireEvent('AddToCart', (d) => trackAddToCart(d as any), data);
+  }, [settings, fireEvent]);
 
   const fbTrackInitiateCheckout = useCallback((params: {
     content_ids: string[];
@@ -74,9 +90,9 @@ export const useFacebookTracking = () => {
     if (!settings?.facebook_pixel_enabled || !settings?.tracking_initiatecheckout) return;
     const currency = settings.currency || 'KWD';
     const contentType = settings.default_content_type || 'product';
-    const eventId = trackInitiateCheckout({ ...params, currency, content_type: contentType });
-    sendServerEvent('InitiateCheckout', eventId, { ...params, currency, content_type: contentType });
-  }, [settings, sendServerEvent]);
+    const data = { ...params, currency, content_type: contentType };
+    fireEvent('InitiateCheckout', (d) => trackInitiateCheckout(d as any), data);
+  }, [settings, fireEvent]);
 
   const fbTrackPurchase = useCallback((params: {
     content_ids: string[];
@@ -87,23 +103,23 @@ export const useFacebookTracking = () => {
     if (!settings?.facebook_pixel_enabled || !settings?.tracking_purchase) return;
     const currency = settings.currency || 'KWD';
     const contentType = settings.default_content_type || 'product';
-    const eventId = trackPurchase({ ...params, currency, content_type: contentType });
-    sendServerEvent('Purchase', eventId, { ...params, currency, content_type: contentType });
-  }, [settings, sendServerEvent]);
+    const data = { ...params, currency, content_type: contentType };
+    fireEvent('Purchase', (d) => trackPurchase(d as any), data);
+  }, [settings, fireEvent]);
 
   const fbTrackLead = useCallback((params?: { value?: number }) => {
     if (!settings?.facebook_pixel_enabled || !settings?.tracking_lead) return;
     const currency = settings.currency || 'KWD';
-    const eventId = trackLead({ ...params, currency });
-    sendServerEvent('Lead', eventId, { ...params, currency });
-  }, [settings, sendServerEvent]);
+    const data = { ...params, currency };
+    fireEvent('Lead', (d) => trackLead(d as any), data);
+  }, [settings, fireEvent]);
 
   const fbTrackCompleteRegistration = useCallback((params?: { value?: number; status?: string }) => {
     if (!settings?.facebook_pixel_enabled || !settings?.tracking_complete_registration) return;
     const currency = settings.currency || 'KWD';
-    const eventId = trackCompleteRegistration({ ...params, currency });
-    sendServerEvent('CompleteRegistration', eventId, { ...params, currency });
-  }, [settings, sendServerEvent]);
+    const data = { ...params, currency };
+    fireEvent('CompleteRegistration', (d) => trackCompleteRegistration(d as any), data);
+  }, [settings, fireEvent]);
 
   return {
     fbTrackViewContent,
