@@ -90,9 +90,9 @@ export const useFacebookTracking = () => {
     if (!settings?.facebook_pixel_enabled || !settings?.tracking_initiatecheckout) return;
     const currency = settings.currency || 'KWD';
     const contentType = settings.default_content_type || 'product';
-    const eventId = trackInitiateCheckout({ ...params, currency, content_type: contentType });
-    sendServerEvent('InitiateCheckout', eventId, { ...params, currency, content_type: contentType });
-  }, [settings, sendServerEvent]);
+    const data = { ...params, currency, content_type: contentType };
+    fireEvent('InitiateCheckout', (d) => trackInitiateCheckout(d as any), data);
+  }, [settings, fireEvent]);
 
   const fbTrackPurchase = useCallback((params: {
     content_ids: string[];
