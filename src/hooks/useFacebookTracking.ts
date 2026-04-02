@@ -103,9 +103,9 @@ export const useFacebookTracking = () => {
     if (!settings?.facebook_pixel_enabled || !settings?.tracking_purchase) return;
     const currency = settings.currency || 'KWD';
     const contentType = settings.default_content_type || 'product';
-    const eventId = trackPurchase({ ...params, currency, content_type: contentType });
-    sendServerEvent('Purchase', eventId, { ...params, currency, content_type: contentType });
-  }, [settings, sendServerEvent]);
+    const data = { ...params, currency, content_type: contentType };
+    fireEvent('Purchase', (d) => trackPurchase(d as any), data);
+  }, [settings, fireEvent]);
 
   const fbTrackLead = useCallback((params?: { value?: number }) => {
     if (!settings?.facebook_pixel_enabled || !settings?.tracking_lead) return;
