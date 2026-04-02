@@ -59,7 +59,7 @@ export const LanguageProvider = ({ children }: { children: ReactNode }) => {
   }, [language, isAdminRoute]);
 
   return (
-    <LanguageContext.Provider value={{ language, t, isRTL }}>
+    <LanguageContext.Provider value={{ language, t, isRTL, setLanguage }}>
       {children}
     </LanguageContext.Provider>
   );
