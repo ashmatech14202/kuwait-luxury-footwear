@@ -57,7 +57,7 @@ const CheckoutPage = () => {
       address: `${form.address}${form.block ? `, Block ${form.block}` : ''}`,
       area: form.area, notes: form.notes,
       cartItems: items.map(item => ({
-        productName: item.product.name, size: item.size, color: item.color,
+        productId: item.product.id, productName: item.product.name, size: item.size, color: item.color,
         quantity: item.quantity, price: item.product.price,
       })),
       cartTotal: total,
@@ -77,7 +77,7 @@ const CheckoutPage = () => {
 
     setIsSubmitting(true);
     const orderItems = items.map(item => ({
-      productName: item.product.name, size: item.size, color: item.color,
+      productId: item.product.id, productName: item.product.name, size: item.size, color: item.color,
       quantity: item.quantity, price: item.product.price,
     }));
     const shippingAddress = `${form.address}, Block ${form.block}, ${form.area}, Kuwait`;
