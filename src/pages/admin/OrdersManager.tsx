@@ -5,7 +5,7 @@ import { toast } from 'sonner';
 import { printInvoice, printCourierSlip } from '@/components/admin/InvoicePrint';
 import { Printer, Truck, Trash2, Eye } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-
+import AddOrderDialog from '@/components/admin/AddOrderDialog';
 const statusColors: Record<string, string> = {
   pending: 'bg-yellow-100 text-yellow-700',
   confirmed: 'bg-blue-100 text-blue-700',
@@ -52,9 +52,12 @@ const OrdersManager = () => {
 
   return (
     <div>
-      <div className="mb-8">
-        <h1 className="font-heading text-3xl font-bold uppercase tracking-wider text-foreground">Orders</h1>
-        <p className="font-body text-sm text-muted-foreground mt-1">{orders.length} total orders</p>
+      <div className="flex items-center justify-between mb-8">
+        <div>
+          <h1 className="font-heading text-3xl font-bold uppercase tracking-wider text-foreground">Orders</h1>
+          <p className="font-body text-sm text-muted-foreground mt-1">{orders.length} total orders</p>
+        </div>
+        <AddOrderDialog />
       </div>
 
       <div className="flex flex-wrap gap-2 mb-6">
