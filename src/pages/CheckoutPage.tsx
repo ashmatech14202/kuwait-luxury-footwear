@@ -53,9 +53,9 @@ const CheckoutPage = () => {
   useEffect(() => {
     if (items.length === 0) return;
     saveCheckoutLead({
-      name: form.fullName, phone: form.phone, email: form.email,
-      address: `${form.address}${form.block ? `, Block ${form.block}` : ''}`,
-      area: form.area, notes: form.notes,
+      name: form.fullName, phone: form.phone, email: '',
+      address: form.address,
+      area: '', notes: form.notes,
       cartItems: items.map(item => ({
         productId: item.product.id, productName: item.product.name, size: item.size, color: item.color,
         quantity: item.quantity, price: item.product.price,
