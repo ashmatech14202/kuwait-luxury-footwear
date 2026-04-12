@@ -27,7 +27,7 @@ const CheckoutPage = () => {
   const [selectedShippingId, setSelectedShippingId] = useState('');
 
   const [form, setForm] = useState({
-    fullName: '', email: '', phone: '', address: '', area: '', block: '', notes: '',
+    fullName: '', phone: '', address: '', notes: '',
   });
 
   useEffect(() => {
