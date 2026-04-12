@@ -70,7 +70,7 @@ const CheckoutPage = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!form.fullName || !form.phone || !form.address || !form.area) {
+    if (!form.fullName || !form.phone || !form.address) {
       toast.error(t('checkout.fill_required'));
       return;
     }
@@ -80,13 +80,13 @@ const CheckoutPage = () => {
       productId: item.product.id, productName: item.product.name, size: item.size, color: item.color,
       quantity: item.quantity, price: item.product.price,
     }));
-    const shippingAddress = `${form.address}, Block ${form.block}, ${form.area}, Kuwait`;
+    const shippingAddress = `${form.address}, Kuwait`;
     const orderNumber = `ORD${String(Date.now()).slice(-6)}`;
 
     try {
       await addOrder.mutateAsync({
         order_number: orderNumber, customer_name: form.fullName,
-        customer_email: form.email, customer_phone: form.phone,
+        customer_email: '', customer_phone: form.phone,
         items: orderItems, total, status: 'pending', payment_method: 'cod',
         shipping_address: shippingAddress,
         notes: `${form.notes}${selectedShipping ? `\nShipping: ${selectedShipping.name} (${shippingCharge === 0 ? 'Free' : shippingCharge + ' KWD'})` : ''}`,
