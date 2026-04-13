@@ -1,6 +1,6 @@
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useState, useMemo, useEffect } from 'react';
-import { Star, Heart, Minus, Plus, Truck, RefreshCw, Shield, Zap } from 'lucide-react';
+import { Star, Heart, Minus, Plus, Truck, RefreshCw, Shield, Zap, MessageCircle } from 'lucide-react';
 import { useActiveProducts } from '@/hooks/useDatabase';
 import { useProductVariations } from '@/hooks/useProductVariations';
 import { useCart } from '@/context/CartContext';
