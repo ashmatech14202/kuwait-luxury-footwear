@@ -222,9 +222,19 @@ const ProductPage = () => {
 
               <button onClick={handleBuyNow}
                 disabled={variationStock !== null && variationStock <= 0}
-                className="w-full h-12 bg-foreground text-background font-body text-sm font-bold tracking-wider uppercase hover:bg-foreground/90 transition-all duration-300 rounded-sm disabled:opacity-50 disabled:cursor-not-allowed mb-8">
+                className="w-full h-12 bg-foreground text-background font-body text-sm font-bold tracking-wider uppercase hover:bg-foreground/90 transition-all duration-300 rounded-sm disabled:opacity-50 disabled:cursor-not-allowed mb-3">
                 {t('product.buy_now')}
               </button>
+
+              <a
+                href={`https://wa.me/96512345678?text=${encodeURIComponent(`Hi! I'd like to order:\n\nProduct: ${product.name}\nBrand: ${product.brand}\nSize: ${selectedSize || 'Not selected'}\nColor: ${selectedColor || 'Not selected'}\nQuantity: ${quantity}\nPrice: ${displayPrice} KWD\n\nPlease confirm my order. Thank you!`)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-full h-12 bg-[#25D366] text-white font-body text-sm font-bold tracking-wider uppercase hover:bg-[#20bd5a] transition-all duration-300 rounded-sm flex items-center justify-center gap-2 mb-8"
+              >
+                <MessageCircle className="w-5 h-5" />
+                Order on WhatsApp
+              </a>
 
               <div className="space-y-3 border-t border-border pt-6">
                 {[
