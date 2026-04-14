@@ -160,9 +160,25 @@ const VisitorAnalyticsPage = () => {
       .slice(0, 8);
   }, [pageViews]);
 
+  // Source-filtered sessions
+  const sourceFilteredSessions = useMemo(() => {
+    if (sourceFilter === 'all') return sessions;
+    const patterns: Record<string, string[]> = {
+      facebook: ['facebook', 'fb.com', 'fb.me', 'fbclid'],
+      instagram: ['instagram', 'ig.com', 'l.instagram'],
+      tiktok: ['tiktok', 'tiktok.com', 'tt.'],
+    };
+    const keywords = patterns[sourceFilter] || [];
+    return sessions.filter(s => {
+      const ref = (s.referrer || '').toLowerCase();
+      const entry = (s.entry_page || '').toLowerCase();
+      return keywords.some(k => ref.includes(k) || entry.includes(k));
+    });
+  }, [sessions, sourceFilter]);
+
   // Filtered session list
   const filteredSessions = useMemo(() => {
-    let list = sessions;
+    let list = sourceFilteredSessions;
     if (search) {
       const q = search.toLowerCase();
       list = list.filter(s =>
@@ -175,7 +191,7 @@ const VisitorAnalyticsPage = () => {
       );
     }
     return list.slice(0, 100);
-  }, [sessions, search]);
+  }, [sourceFilteredSessions, search]);
 
   const fiveMinAgo = new Date(Date.now() - 5 * 60000);
   const isOnline = (s: VisitorSession) => s.is_online && new Date(s.last_active_at) > fiveMinAgo;
