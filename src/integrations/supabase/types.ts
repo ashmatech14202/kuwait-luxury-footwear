@@ -530,6 +530,9 @@ export type Database = {
           meta_title: string | null
           site_description: string | null
           site_name: string | null
+          tiktok_access_token: string | null
+          tiktok_pixel_enabled: boolean | null
+          tiktok_pixel_id: string | null
           tracking_addtocart: boolean | null
           tracking_complete_registration: boolean | null
           tracking_initiatecheckout: boolean | null
@@ -571,6 +574,9 @@ export type Database = {
           meta_title?: string | null
           site_description?: string | null
           site_name?: string | null
+          tiktok_access_token?: string | null
+          tiktok_pixel_enabled?: boolean | null
+          tiktok_pixel_id?: string | null
           tracking_addtocart?: boolean | null
           tracking_complete_registration?: boolean | null
           tracking_initiatecheckout?: boolean | null
@@ -612,6 +618,9 @@ export type Database = {
           meta_title?: string | null
           site_description?: string | null
           site_name?: string | null
+          tiktok_access_token?: string | null
+          tiktok_pixel_enabled?: boolean | null
+          tiktok_pixel_id?: string | null
           tracking_addtocart?: boolean | null
           tracking_complete_registration?: boolean | null
           tracking_initiatecheckout?: boolean | null
