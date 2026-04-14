@@ -62,6 +62,7 @@ const VisitorAnalyticsPage = () => {
   const { data: pageViews = [], isLoading: loadingViews } = usePageViews();
   const [search, setSearch] = useState('');
   const [dateFilter, setDateFilter] = useState('today');
+  const [sourceFilter, setSourceFilter] = useState('all');
 
   const now = new Date();
   const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
