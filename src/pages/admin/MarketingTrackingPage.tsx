@@ -7,12 +7,20 @@ import { Switch } from '@/components/ui/switch';
 import { Input } from '@/components/ui/input';
 import { Eye, EyeOff, Send } from 'lucide-react';
 
+const Toggle = ({ label, checked, onChange }: { label: string; checked: boolean; onChange: (v: boolean) => void }) => (
+  <div className="flex items-center justify-between py-2">
+    <span className="font-body text-sm text-foreground">{label}</span>
+    <Switch checked={checked} onCheckedChange={onChange} />
+  </div>
+);
+
 const MarketingTrackingPage = () => {
   const { data: settings, isLoading } = useTrackingSettings();
   const queryClient = useQueryClient();
   const [saving, setSaving] = useState(false);
   const [testing, setTesting] = useState(false);
   const [showToken, setShowToken] = useState(false);
+  const [showTiktokToken, setShowTiktokToken] = useState(false);
 
   const [form, setForm] = useState({
     facebook_pixel_id: '',
@@ -21,6 +29,9 @@ const MarketingTrackingPage = () => {
     facebook_access_token: '',
     facebook_test_event_code: '',
     facebook_api_version: 'v21.0',
+    tiktok_pixel_id: '',
+    tiktok_pixel_enabled: false,
+    tiktok_access_token: '',
     tracking_pageview: true,
     tracking_viewcontent: true,
     tracking_addtocart: true,
@@ -40,6 +51,9 @@ const MarketingTrackingPage = () => {
         facebook_access_token: settings.facebook_access_token,
         facebook_test_event_code: settings.facebook_test_event_code,
         facebook_api_version: settings.facebook_api_version,
+        tiktok_pixel_id: settings.tiktok_pixel_id,
+        tiktok_pixel_enabled: settings.tiktok_pixel_enabled,
+        tiktok_access_token: settings.tiktok_access_token,
         tracking_pageview: settings.tracking_pageview,
         tracking_viewcontent: settings.tracking_viewcontent,
         tracking_addtocart: settings.tracking_addtocart,
@@ -54,11 +68,15 @@ const MarketingTrackingPage = () => {
 
   const handleSave = async () => {
     if (form.facebook_pixel_enabled && !form.facebook_pixel_id.trim()) {
-      toast.error('Pixel ID is required when Pixel is enabled');
+      toast.error('Pixel ID is required when Facebook Pixel is enabled');
       return;
     }
     if (form.facebook_capi_enabled && !form.facebook_access_token.trim()) {
-      toast.error('Access Token is required when CAPI is enabled');
+      toast.error('Access Token is required when Facebook CAPI is enabled');
+      return;
+    }
+    if (form.tiktok_pixel_enabled && !form.tiktok_pixel_id.trim()) {
+      toast.error('Pixel ID is required when TikTok Pixel is enabled');
       return;
     }
 
@@ -104,77 +122,73 @@ const MarketingTrackingPage = () => {
     }
   };
 
-  const Toggle = ({ label, checked, onChange }: { label: string; checked: boolean; onChange: (v: boolean) => void }) => (
-    <div className="flex items-center justify-between py-2">
-      <span className="font-body text-sm text-foreground">{label}</span>
-      <Switch checked={checked} onCheckedChange={onChange} />
-    </div>
-  );
-
   if (isLoading) return <p className="text-center py-10 text-muted-foreground">Loading...</p>;
 
   return (
     <div>
       <div className="mb-8">
         <h1 className="font-heading text-3xl font-bold uppercase tracking-wider text-foreground">Marketing Tracking</h1>
-        <p className="font-body text-sm text-muted-foreground mt-1">Facebook Pixel & Conversion API Settings</p>
+        <p className="font-body text-sm text-muted-foreground mt-1">Facebook Pixel, TikTok Pixel & Conversion API Settings</p>
       </div>
 
       <div className="max-w-2xl space-y-8">
-        {/* Pixel Settings */}
+        {/* Facebook Pixel Settings */}
         <div className="bg-card border border-border p-6 rounded-lg">
           <h3 className="font-heading text-lg font-bold uppercase tracking-wider mb-4 text-foreground">Facebook Pixel</h3>
           <div className="space-y-4">
             <div>
               <label className="block font-body text-xs uppercase tracking-wider text-muted-foreground mb-1">Pixel ID</label>
-              <Input
-                value={form.facebook_pixel_id}
-                onChange={e => setForm({ ...form, facebook_pixel_id: e.target.value })}
-                placeholder="e.g. 123456789012345"
-              />
+              <Input value={form.facebook_pixel_id} onChange={e => setForm({ ...form, facebook_pixel_id: e.target.value })} placeholder="e.g. 123456789012345" />
               <p className="font-body text-xs text-muted-foreground mt-1">Find this in your Meta Events Manager</p>
             </div>
             <Toggle label="Enable Facebook Pixel" checked={form.facebook_pixel_enabled} onChange={v => setForm({ ...form, facebook_pixel_enabled: v })} />
           </div>
         </div>
 
-        {/* CAPI Settings */}
+        {/* Facebook CAPI Settings */}
         <div className="bg-card border border-border p-6 rounded-lg">
-          <h3 className="font-heading text-lg font-bold uppercase tracking-wider mb-4 text-foreground">Conversion API (CAPI)</h3>
+          <h3 className="font-heading text-lg font-bold uppercase tracking-wider mb-4 text-foreground">Facebook Conversion API (CAPI)</h3>
           <div className="space-y-4">
             <Toggle label="Enable Conversion API" checked={form.facebook_capi_enabled} onChange={v => setForm({ ...form, facebook_capi_enabled: v })} />
             <div>
               <label className="block font-body text-xs uppercase tracking-wider text-muted-foreground mb-1">Meta Access Token</label>
               <div className="relative">
-                <Input
-                  type={showToken ? 'text' : 'password'}
-                  value={form.facebook_access_token}
-                  onChange={e => setForm({ ...form, facebook_access_token: e.target.value })}
-                  placeholder="EAAxxxxxxxxx..."
-                  className="pr-10"
-                />
+                <Input type={showToken ? 'text' : 'password'} value={form.facebook_access_token} onChange={e => setForm({ ...form, facebook_access_token: e.target.value })} placeholder="EAAxxxxxxxxx..." className="pr-10" />
                 <button type="button" onClick={() => setShowToken(!showToken)} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground">
                   {showToken ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
               </div>
-              <p className="font-body text-xs text-muted-foreground mt-1">Generate from Meta Business Settings → System Users</p>
             </div>
             <div>
               <label className="block font-body text-xs uppercase tracking-wider text-muted-foreground mb-1">Test Event Code</label>
-              <Input
-                value={form.facebook_test_event_code}
-                onChange={e => setForm({ ...form, facebook_test_event_code: e.target.value })}
-                placeholder="TEST12345"
-              />
-              <p className="font-body text-xs text-muted-foreground mt-1">Optional — from Events Manager → Test Events tab</p>
+              <Input value={form.facebook_test_event_code} onChange={e => setForm({ ...form, facebook_test_event_code: e.target.value })} placeholder="TEST12345" />
             </div>
             <div>
               <label className="block font-body text-xs uppercase tracking-wider text-muted-foreground mb-1">API Version</label>
-              <Input
-                value={form.facebook_api_version}
-                onChange={e => setForm({ ...form, facebook_api_version: e.target.value })}
-                placeholder="v21.0"
-              />
+              <Input value={form.facebook_api_version} onChange={e => setForm({ ...form, facebook_api_version: e.target.value })} placeholder="v21.0" />
+            </div>
+          </div>
+        </div>
+
+        {/* TikTok Pixel Settings */}
+        <div className="bg-card border border-border p-6 rounded-lg">
+          <h3 className="font-heading text-lg font-bold uppercase tracking-wider mb-4 text-foreground">TikTok Pixel</h3>
+          <div className="space-y-4">
+            <Toggle label="Enable TikTok Pixel" checked={form.tiktok_pixel_enabled} onChange={v => setForm({ ...form, tiktok_pixel_enabled: v })} />
+            <div>
+              <label className="block font-body text-xs uppercase tracking-wider text-muted-foreground mb-1">TikTok Pixel ID</label>
+              <Input value={form.tiktok_pixel_id} onChange={e => setForm({ ...form, tiktok_pixel_id: e.target.value })} placeholder="e.g. D7F9CR3C77U97DR2O8BG" />
+              <p className="font-body text-xs text-muted-foreground mt-1">Find this in your TikTok Ads Manager → Events</p>
+            </div>
+            <div>
+              <label className="block font-body text-xs uppercase tracking-wider text-muted-foreground mb-1">TikTok Access Token</label>
+              <div className="relative">
+                <Input type={showTiktokToken ? 'text' : 'password'} value={form.tiktok_access_token} onChange={e => setForm({ ...form, tiktok_access_token: e.target.value })} placeholder="Access token..." className="pr-10" />
+                <button type="button" onClick={() => setShowTiktokToken(!showTiktokToken)} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground">
+                  {showTiktokToken ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                </button>
+              </div>
+              <p className="font-body text-xs text-muted-foreground mt-1">Optional — for TikTok Events API server-side tracking</p>
             </div>
           </div>
         </div>
@@ -198,11 +212,7 @@ const MarketingTrackingPage = () => {
           <h3 className="font-heading text-lg font-bold uppercase tracking-wider mb-4 text-foreground">Advanced</h3>
           <div>
             <label className="block font-body text-xs uppercase tracking-wider text-muted-foreground mb-1">Default Content Type</label>
-            <Input
-              value={form.default_content_type}
-              onChange={e => setForm({ ...form, default_content_type: e.target.value })}
-              placeholder="product"
-            />
+            <Input value={form.default_content_type} onChange={e => setForm({ ...form, default_content_type: e.target.value })} placeholder="product" />
           </div>
         </div>
 
@@ -215,7 +225,7 @@ const MarketingTrackingPage = () => {
           <button onClick={handleTestEvent} disabled={testing || !form.facebook_capi_enabled}
             className="flex items-center gap-2 border border-border text-foreground px-6 py-3 rounded-md font-body text-sm font-bold tracking-wider uppercase hover:bg-muted transition-all disabled:opacity-50">
             <Send className="w-4 h-4" />
-            {testing ? 'Sending...' : 'Send Test Event'}
+            {testing ? 'Sending...' : 'Send Test Event (Facebook)'}
           </button>
         </div>
       </div>
