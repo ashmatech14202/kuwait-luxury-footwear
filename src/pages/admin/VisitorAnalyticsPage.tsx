@@ -347,10 +347,25 @@ const VisitorAnalyticsPage = () => {
       <div className="bg-card border border-border rounded-lg">
         <div className="p-4 border-b border-border flex flex-col sm:flex-row gap-3 items-start sm:items-center justify-between">
           <h3 className="font-heading text-lg font-bold uppercase tracking-wider text-foreground">Recent Visitors</h3>
-          <div className="relative w-full sm:w-64">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-            <input type="text" placeholder="Search sessions..." value={search} onChange={e => setSearch(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 border border-border bg-background rounded-md font-body text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary transition-colors" />
+          <div className="flex flex-wrap items-center gap-2">
+            <div className="flex gap-1">
+              {[
+                { key: 'all', label: 'All' },
+                { key: 'facebook', label: 'Facebook' },
+                { key: 'instagram', label: 'Instagram' },
+                { key: 'tiktok', label: 'TikTok' },
+              ].map(f => (
+                <button key={f.key} onClick={() => setSourceFilter(f.key)}
+                  className={`px-3 py-1.5 text-xs font-body rounded-md transition-colors ${sourceFilter === f.key ? 'bg-primary text-primary-foreground' : 'bg-secondary text-muted-foreground hover:text-foreground'}`}>
+                  {f.label}
+                </button>
+              ))}
+            </div>
+            <div className="relative w-full sm:w-52">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+              <input type="text" placeholder="Search sessions..." value={search} onChange={e => setSearch(e.target.value)}
+                className="w-full pl-10 pr-4 py-2 border border-border bg-background rounded-md font-body text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary transition-colors" />
+            </div>
           </div>
         </div>
         <div className="overflow-x-auto">
