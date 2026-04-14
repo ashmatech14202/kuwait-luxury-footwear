@@ -3,12 +3,12 @@ import { useProductReviews } from '@/hooks/useReviews';
 import { motion } from 'framer-motion';
 
 const staticReviews = [
-  { id: 'static-1', reviewer_name: 'Ahmed K.', rating: 5, review_text: 'Amazing quality! Exactly as described. Fast delivery too. Will definitely order again.', reviewer_image: '' },
-  { id: 'static-2', reviewer_name: 'Sara M.', rating: 5, review_text: 'Best shoes I\'ve bought in Kuwait. Original product, great packaging. Highly recommended!', reviewer_image: '' },
-  { id: 'static-3', reviewer_name: 'Mohammed A.', rating: 4, review_text: 'Very comfortable and stylish. My friends keep asking where I got them. Great store!', reviewer_image: '' },
-  { id: 'static-4', reviewer_name: 'Fatima R.', rating: 5, review_text: 'Perfect fit! The color is exactly like the photos. Customer service was very helpful.', reviewer_image: '' },
-  { id: 'static-5', reviewer_name: 'Omar H.', rating: 5, review_text: 'Third time ordering from here. Never disappointed. 100% same authentic products.', reviewer_image: '' },
-  { id: 'static-6', reviewer_name: 'Nour S.', rating: 4, review_text: 'Love the quality! Arrived faster than expected. Will be a regular customer for sure.', reviewer_image: '' },
+  { id: 'static-1', reviewer_name: 'أحمد ك.', rating: 5, review_text: 'جودة ممتازة! تماماً كما في الوصف. توصيل سريع أيضاً. بالتأكيد سأطلب مرة أخرى.', reviewer_image: '' },
+  { id: 'static-2', reviewer_name: 'سارة م.', rating: 5, review_text: 'أفضل أحذية اشتريتها في الكويت. منتج أصلي وتغليف رائع. أنصح بشدة!', reviewer_image: '' },
+  { id: 'static-3', reviewer_name: 'محمد أ.', rating: 4, review_text: 'مريح جداً وأنيق. أصدقائي يسألونني دائماً من أين اشتريتها. متجر ممتاز!', reviewer_image: '' },
+  { id: 'static-4', reviewer_name: 'فاطمة ر.', rating: 5, review_text: 'مقاس مثالي! اللون تماماً مثل الصور. خدمة العملاء كانت مفيدة جداً.', reviewer_image: '' },
+  { id: 'static-5', reviewer_name: 'عمر ح.', rating: 5, review_text: 'ثالث مرة أطلب من هنا. لم أخيب ظني أبداً. منتجات أصلية 100%.', reviewer_image: '' },
+  { id: 'static-6', reviewer_name: 'نور س.', rating: 4, review_text: 'أحب الجودة! وصل أسرع من المتوقع. سأكون زبون دائم بالتأكيد.', reviewer_image: '' },
 ];
 
 const ProductReviews = ({ productId }: { productId: string }) => {
