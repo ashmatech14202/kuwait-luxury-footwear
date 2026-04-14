@@ -1,42 +1,87 @@
+import { useState, useMemo } from 'react';
 import { useOrders } from '@/hooks/useDatabase';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, AreaChart, Area } from 'recharts';
+import { Calendar } from 'lucide-react';
 
 const AnalyticsPage = () => {
   const { data: orders = [] } = useOrders();
+  const [startDate, setStartDate] = useState('');
+  const [endDate, setEndDate] = useState('');
+  const [quickFilter, setQuickFilter] = useState('all');
 
-  const totalRevenue = orders.reduce((s, o) => s + Number(o.total), 0);
-  const avgOrderValue = orders.length > 0 ? totalRevenue / orders.length : 0;
+  const filteredOrders = useMemo(() => {
+    let list = orders;
+    const now = new Date();
+    const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+
+    if (quickFilter === 'today') {
+      list = list.filter(o => new Date(o.created_at) >= startOfToday);
+    } else if (quickFilter === 'yesterday') {
+      const startOfYesterday = new Date(startOfToday.getTime() - 86400000);
+      list = list.filter(o => {
+        const d = new Date(o.created_at);
+        return d >= startOfYesterday && d < startOfToday;
+      });
+    } else if (quickFilter === '7d') {
+      list = list.filter(o => new Date(o.created_at) >= new Date(startOfToday.getTime() - 7 * 86400000));
+    } else if (quickFilter === '30d') {
+      list = list.filter(o => new Date(o.created_at) >= new Date(startOfToday.getTime() - 30 * 86400000));
+    } else if (quickFilter === 'custom' && startDate) {
+      const from = new Date(startDate);
+      const to = endDate ? new Date(endDate + 'T23:59:59') : new Date();
+      list = list.filter(o => {
+        const d = new Date(o.created_at);
+        return d >= from && d <= to;
+      });
+    }
+    return list;
+  }, [orders, quickFilter, startDate, endDate]);
+
+  const totalRevenue = filteredOrders.reduce((s, o) => s + Number(o.total), 0);
+  const avgOrderValue = filteredOrders.length > 0 ? totalRevenue / filteredOrders.length : 0;
 
   // Group orders by date
-  const dateMap = new Map<string, { revenue: number; count: number }>();
-  orders.forEach(o => {
-    const date = new Date(o.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-    const existing = dateMap.get(date) || { revenue: 0, count: 0 };
-    existing.revenue += Number(o.total);
-    existing.count += 1;
-    dateMap.set(date, existing);
-  });
-  const revenueData = Array.from(dateMap.entries()).map(([date, d]) => ({ date, revenue: d.revenue, orders: d.count }));
+  const revenueData = useMemo(() => {
+    const dateMap = new Map<string, { revenue: number; count: number }>();
+    filteredOrders.forEach(o => {
+      const date = new Date(o.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+      const existing = dateMap.get(date) || { revenue: 0, count: 0 };
+      existing.revenue += Number(o.total);
+      existing.count += 1;
+      dateMap.set(date, existing);
+    });
+    return Array.from(dateMap.entries()).map(([date, d]) => ({ date, revenue: d.revenue, orders: d.count }));
+  }, [filteredOrders]);
 
   // Top products from order items
-  const productMap = new Map<string, { sales: number; revenue: number }>();
-  orders.forEach(o => {
-    const items = (o.items as any[]) || [];
-    items.forEach((item: any) => {
-      const existing = productMap.get(item.productName) || { sales: 0, revenue: 0 };
-      existing.sales += item.quantity;
-      existing.revenue += item.price * item.quantity;
-      productMap.set(item.productName, existing);
+  const topProducts = useMemo(() => {
+    const productMap = new Map<string, { sales: number; revenue: number }>();
+    filteredOrders.forEach(o => {
+      const items = (o.items as any[]) || [];
+      items.forEach((item: any) => {
+        const existing = productMap.get(item.productName) || { sales: 0, revenue: 0 };
+        existing.sales += item.quantity;
+        existing.revenue += item.price * item.quantity;
+        productMap.set(item.productName, existing);
+      });
     });
-  });
-  const topProducts = Array.from(productMap.entries())
-    .map(([name, d]) => ({ name, ...d }))
-    .sort((a, b) => b.revenue - a.revenue)
-    .slice(0, 5);
+    return Array.from(productMap.entries())
+      .map(([name, d]) => ({ name, ...d }))
+      .sort((a, b) => b.revenue - a.revenue)
+      .slice(0, 5);
+  }, [filteredOrders]);
 
-  const tooltipStyle = { background: '#fff', border: '1px solid hsl(220, 13%, 89%)', borderRadius: 8, fontFamily: 'Inter', boxShadow: '0 4px 12px rgba(0,0,0,0.08)' };
+  const tooltipStyle = { background: 'hsl(var(--card))', border: '1px solid hsl(var(--border))', borderRadius: 8, fontFamily: 'Inter', boxShadow: '0 4px 12px rgba(0,0,0,0.08)' };
   const gridStroke = 'hsl(220, 13%, 91%)';
   const axisStroke = 'hsl(220, 10%, 60%)';
+
+  const handleQuickFilter = (f: string) => {
+    setQuickFilter(f);
+    if (f !== 'custom') {
+      setStartDate('');
+      setEndDate('');
+    }
+  };
 
   return (
     <div>
@@ -45,12 +90,41 @@ const AnalyticsPage = () => {
         <p className="font-body text-sm text-muted-foreground mt-1">Real sales data from your database</p>
       </div>
 
+      {/* Date Filter Bar */}
+      <div className="bg-card border border-border rounded-lg p-4 mb-6">
+        <div className="flex flex-wrap items-center gap-2">
+          <Calendar className="w-4 h-4 text-muted-foreground" />
+          {[
+            { key: 'all', label: 'All Time' },
+            { key: 'today', label: 'Today' },
+            { key: 'yesterday', label: 'Yesterday' },
+            { key: '7d', label: 'Last 7 Days' },
+            { key: '30d', label: 'Last 30 Days' },
+            { key: 'custom', label: 'Custom' },
+          ].map(f => (
+            <button key={f.key} onClick={() => handleQuickFilter(f.key)}
+              className={`px-3 py-1.5 text-xs font-body rounded-md transition-colors ${quickFilter === f.key ? 'bg-primary text-primary-foreground' : 'bg-secondary text-muted-foreground hover:text-foreground'}`}>
+              {f.label}
+            </button>
+          ))}
+          {quickFilter === 'custom' && (
+            <div className="flex items-center gap-2 ml-2">
+              <input type="date" value={startDate} onChange={e => setStartDate(e.target.value)}
+                className="px-3 py-1.5 text-xs font-body border border-border bg-background rounded-md text-foreground focus:outline-none focus:border-primary" />
+              <span className="text-xs text-muted-foreground">to</span>
+              <input type="date" value={endDate} onChange={e => setEndDate(e.target.value)}
+                className="px-3 py-1.5 text-xs font-body border border-border bg-background rounded-md text-foreground focus:outline-none focus:border-primary" />
+            </div>
+          )}
+        </div>
+      </div>
+
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
         {[
           { label: 'Total Revenue', value: `${totalRevenue.toLocaleString()} KWD` },
           { label: 'Avg Order Value', value: `${avgOrderValue.toFixed(1)} KWD` },
-          { label: 'Total Orders', value: orders.length },
-          { label: 'Delivered', value: orders.filter(o => o.status === 'delivered').length },
+          { label: 'Total Orders', value: filteredOrders.length },
+          { label: 'Delivered', value: filteredOrders.filter(o => o.status === 'delivered').length },
         ].map(kpi => (
           <div key={kpi.label} className="bg-card border border-border p-5 rounded-lg">
             <p className="font-body text-xs uppercase tracking-wider text-muted-foreground mb-1">{kpi.label}</p>
