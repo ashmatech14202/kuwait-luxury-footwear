@@ -4,7 +4,7 @@ import { Pencil } from 'lucide-react';
 interface CartItem {
   product: { id: string; name: string; image: string; price: number };
   quantity: number;
-  size: string;
+  size: number;
   color: string;
 }
 
